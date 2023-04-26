@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Register form</h1>
+    <form action="" style="text-align: center;" >
+        <div>
+            <label for="f-name">ชื่อ</label>
+            <input type="text" name="f-name" placeholder="ป้อนชื่อ" required="true">
+        </div>
+        <div>
+            <label for="l-name">นามสกุล</label>
+            <input type="text" name="l-name" placeholder="ป้อนนามสกุล">
+        </div>
+        <div>
+            <label for="email">email</label>
+            <input type="email" name="email" placeholder="ป้อนemail" required="true">
+        </div>
+        <div>
+            <label for="password">password</label>
+            <input type="password" name="password" placeholder="ป้อนpassword">
+        </div>
+        <div>
+            <label for="address">ที่อยู่</label>
+            <textarea name="" id="" cols="20" rows="5"></textarea>
+        </div>
+        <div>
+            <label for="age">อายุ</label>
+            <input type="number" name="age" placeholder="ป้อนอายุ" min="0" value="10">
+        </div>
+        <div>
+            <label for="birthdate">วันเกิด</label>
+            <input type="date" name="birthdate" placeholder="ป้อนวันเกิด">
+        </div>
+        <div>
+            <label for="tel">เบอร์โทรศัพท์</label>
+            <input type="tel" name="tel">
+        </div>
+        <div>
+            <label for="range">ช่วงตัวเลข</label>
+            <input type="range" name="rangenum" min="0" max="100" value="10">
+        </div>
+        <div>
+            <label for="lastname">ระดับการศึกษา</label>
+            <select name="edu" id="">
+                <option value="มัธยมศึกษา">มัธยมศึกษา</option>
+                <option value="ปริญญาตรี">ปริญญาตรี</option>
+                <option value="ปริญญาโท" selected>ปริญญาโท</option>
+            </select>
+        </div>
+        <div>
+            <label for="lastname">เพศ</label>
+            <input type="radio" name="gender">เพศชาย
+            <input type="radio" name="gender">เพศหญิง
+            <input type="radio" name="gender">กำหนดเอง
+        </div>
+        <div>
+            <label for="lastname">สิ่งที่ชอบ</label>
+            <input type="checkbox" name="fav">เขียนเว็บ
+            <input type="checkbox" name="fav">สร้างเกม
+            <input type="checkbox" name="fav">ซ่อมคอม
+            <input type="checkbox" name="fav">เล่นเกม
+            <input type="checkbox" name="fav">อื่นๆ
+        </div>
+        <div>
+            <label for="lastname">แนบเอกสาร</label>
+            <input type="file">
+        </div>
+        <div>
+            <label for="lastname">เว็บไซต์</label>
+            <input type="url">
+        </div>
+        <div>
+            <button type="submit">บันทึกข้อมูล</button>
+            <button type="reset">ล้างข้อมูล</button>
+        </div>
+    </form>
+</body>
+
+</html>
