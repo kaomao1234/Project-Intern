@@ -1,5 +1,5 @@
 import * as mui from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Home = () => {
   var [increment, setIncrement] = useState(0);
@@ -8,7 +8,11 @@ const Home = () => {
     increment++;
     setIncrement(increment);
   }
+  useEffect(() => {
+    console.log("mount");
 
+    return () => {};
+  }, []);
   return (
     <div>
       <link

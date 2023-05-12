@@ -1,11 +1,29 @@
-
-import Counter from "./counter/counter";
-import { Provider } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  increment,
+  decrement,
+  incrementByAmount,
+} from "../store/feature/counter";
+import Home from "./firstpage";
 const App = () => {
+  const dispatch = useDispatch();
+  const count = useSelector((state) => state.counter.value);
+  console.log(count);
+
   return (
-    <Provider>
-      <Counter></Counter>
-    </Provider>
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          dispatch(incrementByAmount(5));
+        }}
+      >
+        increment
+      </button>
+      <p>{count}</p>
+      {/* <Home/> */}
+    </div>
   );
 };
 export default App;
