@@ -10,11 +10,11 @@ Restaurant food & drink
 
 - Home page
     - Menus [category food or drink]
-        - Search
+        - Search menu
         - Lists menus
-        - Add new menus
-        - Remove menus
-        - Update menus
+        - Select menu and create order
+        - Remove order
+        - Update order
 - Menus detail
     - Add to cart
     - Select amount menu
