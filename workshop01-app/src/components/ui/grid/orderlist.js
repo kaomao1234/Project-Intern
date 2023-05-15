@@ -10,7 +10,16 @@ const orderlist = (props) => {
   };
   const formattedDate = Intl.DateTimeFormat("en-US", options).format(date);
   return (
-    <Grid item xs={12} sm={12} md={12} lg={5}>
+    <Grid
+      item
+      xs={12}
+      sm={12}
+      md={12}
+      lg={5}
+      sx={{
+        height: "calc(100vh * 0.8)",
+      }}
+    >
       <Box
         sx={{
           backgroundColor: "#F95F66",
@@ -29,10 +38,7 @@ const orderlist = (props) => {
           width: "100%",
           padding: "10px",
           overflowY: "scroll",
-          height: {
-            lg: "calc(100vh * 0.57)",
-            xl: "calc(100vh * 0.57)",
-          },
+          height: "70%",
           "&::-webkit-scrollbar": {
             width: "8px",
             backgroundColor: "#E4E5E9",

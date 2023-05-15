@@ -14,7 +14,7 @@ import {
   CuisineButton,
   LeadingImageButton,
   TextFieldIcon,
-  SelectCard,
+  MenuCard,
   MenulistGrid,
   OrderlistGrid,
   QuantityField,
@@ -26,17 +26,16 @@ import {
   decrease,
   remove,
   totalize,
+  addTocart,
+  removeFromcart,
 } from "@/store/feature/homecontroller";
 const Home = () => {
-  const temp = [];
-  for (let index = 0; index < 20; index++) {
-    temp.push(<SelectCard key={index}></SelectCard>);
-  }
   const dispatch = useDispatch();
   dispatch(totalize());
   const height = use100vh();
-  const mockdata = useSelector((state) => state.homecontroller.data);
+  const menuCart = useSelector((state) => state.homecontroller.menuCart);
   const total = useSelector((state) => state.homecontroller.totalPrice);
+  const menu = useSelector((state) => state.homecontroller.menu);
   return (
     <Box
       sx={{
@@ -168,16 +167,18 @@ const Home = () => {
         </Box>
         <Box sx={{ marginX: "12px", marginTop: "20px" }}>
           <Grid container spacing={2} sx={{}}>
-            <MenulistGrid>{temp}</MenulistGrid>
-            <OrderlistGrid totalValue={parseFloat(total).toFixed(2)}>
-              {mockdata.map((item, index) => (
-                <QuantityField
-                  key={index}
+            <MenulistGrid>
+              {menu.map((item, index) => (
+                <MenuCard
                   model={item}
-                  onIncreaseClick={() => dispatch(increase(index))}
-                  onDecreaseClick={() => dispatch(decrease(index))}
-                  onRemoveClick={() => dispatch(remove(index))}
+                  key={index}
+                  onClick={() => console.log("Hello")}
                 />
+              ))}
+            </MenulistGrid>
+            <OrderlistGrid totalValue={parseFloat(total).toFixed(2)}>
+              {menuCart.map((item, index) => (
+                <QuantityField key={index} model={item} />
               ))}
             </OrderlistGrid>
           </Grid>

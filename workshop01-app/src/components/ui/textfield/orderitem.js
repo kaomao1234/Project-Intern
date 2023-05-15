@@ -11,7 +11,7 @@ import {
   Remove,
   ModeEditOutline,
 } from "@mui/icons-material";
-const quantity = (props) => {
+const orderitem = (props) => {
   let model = props.model;
   return (
     <Box
@@ -64,14 +64,13 @@ const quantity = (props) => {
         id="input-with-sx"
         variant="outlined"
         value={model.numberMenu}
-        sx={{
-          width: "150px",
-          borderRadius: "20px",
-          "& .Mui-focused": {
-            borderColor: "#F95F66",
-          },
-        }}
         InputProps={{
+          style: {
+            ".Mui-focused":{
+              borderColor:"red"
+            },
+            borderColor:"#F95F66 !important"
+          },
           endAdornment: (
             <InputAdornment position="end">
               <IconButton onClick={props.onDecreaseClick}>
@@ -98,4 +97,4 @@ const quantity = (props) => {
   );
 };
 
-export default quantity;
+export default orderitem;

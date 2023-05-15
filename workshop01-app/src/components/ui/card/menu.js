@@ -11,32 +11,18 @@ import {
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useState, useEffect, useRef } from "react";
 
-const SelectCardStyle = styled(Card)({
+const MenuCardStyle = styled(Card)({
   borderRadius: "10px",
   height: "220px",
   // width:"180px"
 });
 
-const SelectCard = (props) => {
-  const [isSelected, setIsSelected] = useState(false);
-  const gridRef = useRef();
-  const selectCardRef = useRef();
-
-  const handleClick = () => {
-    setIsSelected(!isSelected);
-  };
-  useEffect(() => {
-    if (selectCardRef.current && gridRef.current) {
-      selectCardRef.current.style.width = gridRef.current.style.width;
-    }
-  }, [gridRef, selectCardRef]);
+const MenuCard = (props) => {
+  const model = props.model;
 
   return (
-    <Grid item xs={12} md={4} sm={6} lg={4} ref={gridRef} >
-      <SelectCardStyle
-        onClick={handleClick}
-        style={{ border: isSelected ? "3px solid #F95F66" : "none" }}
-      >
+    <Grid item xs={12} md={4} sm={6} lg={4}>
+      <MenuCardStyle onClick={props.onClick}>
         <CardActionArea sx={{ height: "100%" }}>
           <Stack
             spacing={2}
@@ -60,7 +46,7 @@ const SelectCard = (props) => {
                   textAlign: "center",
                 }}
               >
-                30 Bath
+                {model.price}THB
               </Typography>
             </Box>
             <Box>
@@ -74,29 +60,13 @@ const SelectCard = (props) => {
                   borderRadius: "5px",
                 }}
               >
-                ต้มจืด
+                {model.menuName}
               </Typography>
             </Box>
           </Stack>
-          {isSelected ? (
-            <CheckBoxIcon
-              sx={{
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                width: "40px",
-                height: "40px",
-                color: "white",
-                backgroundColor: "#F95F66",
-                zIndex: 1,
-                opacity: "0.9",
-              }}
-            ></CheckBoxIcon>
-          ) : (
-            <></>
-          )}
+
           <CardMedia
-            image="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"
+            image={model.imageSrc}
             sx={{
               height: "100%",
               width: "100%",
@@ -104,9 +74,9 @@ const SelectCard = (props) => {
             }}
           />
         </CardActionArea>
-      </SelectCardStyle>
+      </MenuCardStyle>
     </Grid>
   );
 };
 
-export default SelectCard;
+export default MenuCard;

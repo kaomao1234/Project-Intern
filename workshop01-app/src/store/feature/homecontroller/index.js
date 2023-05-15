@@ -1,32 +1,47 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HomeViewModel } from "../../../viewmodel";
-const model = new HomeViewModel();
+const viewmodel = new HomeViewModel();
 export const homeControllerSlice = createSlice({
   name: "homecontroller",
   initialState: {
     totalPrice: 0,
-    data: model.mockdata,
+    menuCart: viewmodel.menuCart,
+    menu: viewmodel.menu,
   },
   reducers: {
     increase: (state, action) => {
-      model.increase(action.payload);
-      state.data = model.mockdata;
+      viewmodel.increase(action.payload);
+      state.menuCart = viewmodel.menuCart;
     },
     decrease: (state, action) => {
-      model.decrease(action.payload);
-      state.data = model.mockdata;
+      viewmodel.decrease(action.payload);
+      state.menuCart = viewmodel.menuCart;
     },
     remove: (state, action) => {
-      model.remove(action.payload);
-      state.data = model.mockdata;
+      viewmodel.remove(action.payload);
+      state.menuCart = viewmodel.menuCart;
     },
     totalize: (state) => {
-      state.totalPrice = model.totalize();
+      state.totalPrice = viewmodel.totalize();
+    },
+    addTocart: (state, action) => {
+      viewmodel.addTocart(action.payload);
+      state.menuCart = viewmodel.menuCart;
+    },
+    removeFromcart: (state, action) => {
+      viewmodel.removeFromcart(action.payload);
+      state.menuCart = viewmodel.menuCart;
     },
   },
 });
 
-export const { increase, decrease, remove, totalize } =
-  homeControllerSlice.actions;
+export const {
+  increase,
+  decrease,
+  remove,
+  totalize,
+  addTocart,
+  removeFromcart,
+} = homeControllerSlice.actions;
 
 export default homeControllerSlice.reducer;
