@@ -185,7 +185,9 @@ class DataBase {
     ];
     this.orderList = [];
   }
-  createOrder(map) {}
+  createOrder(map) {
+    this.orderList.push(map);
+  }
   updateOrder(map) {
     let copyOrderList = [...this.orderList];
     var selectedIndex = copyOrderList.findIndex((item) => item.id == map.id);
@@ -195,6 +197,7 @@ class DataBase {
   readAllMenu() {
     return this.menu;
   }
+  
   deleteOrder(id) {
     let copyOrderList = [...this.orderList];
     var selectedIndex = copyOrderList.findIndex((item) => item.id == map.id);

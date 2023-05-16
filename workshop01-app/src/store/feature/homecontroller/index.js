@@ -5,33 +5,16 @@ export const homeControllerSlice = createSlice({
   name: "homecontroller",
   initialState: {
     totalPrice: 0,
-    menuCart: viewmodel.menuCart,
+    orders: viewmodel.orders,
     menu: viewmodel.menu,
   },
   reducers: {
-    increase: (state, action) => {
-      viewmodel.increase(action.payload);
-      state.menuCart = viewmodel.menuCart;
-    },
-    decrease: (state, action) => {
-      viewmodel.decrease(action.payload);
-      state.menuCart = viewmodel.menuCart;
-    },
-    remove: (state, action) => {
-      viewmodel.remove(action.payload);
-      state.menuCart = viewmodel.menuCart;
-    },
-    totalize: (state) => {
-      state.totalPrice = viewmodel.totalize();
-    },
-    addTocart: (state, action) => {
-      viewmodel.addTocart(action.payload);
-      state.menuCart = viewmodel.menuCart;
-    },
-    removeFromcart: (state, action) => {
-      viewmodel.removeFromcart(action.payload);
-      state.menuCart = viewmodel.menuCart;
-    },
+    increase: (state, action) => {},
+    decrease: (state, action) => {},
+    remove: (state, action) => {},
+    totalize: (state) => {},
+    addTocart: (state, action) => {},
+    removeFromcart: (state, action) => {},
   },
 });
 

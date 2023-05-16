@@ -17,7 +17,7 @@ import {
   MenuCard,
   MenulistGrid,
   OrderlistGrid,
-  QuantityField,
+  OrderItemField
 } from "../components";
 import { use100vh } from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,11 +30,9 @@ import {
   removeFromcart,
 } from "@/store/feature/homecontroller";
 const Home = () => {
-  const dispatch = useDispatch();
-  dispatch(totalize());
+  const dispatch = useDispatch();;
   const height = use100vh();
-  const menuCart = useSelector((state) => state.homecontroller.menuCart);
-  const total = useSelector((state) => state.homecontroller.totalPrice);
+  const total = 0;
   const menu = useSelector((state) => state.homecontroller.menu);
   return (
     <Box
@@ -177,9 +175,6 @@ const Home = () => {
               ))}
             </MenulistGrid>
             <OrderlistGrid totalValue={parseFloat(total).toFixed(2)}>
-              {menuCart.map((item, index) => (
-                <QuantityField key={index} model={item} />
-              ))}
             </OrderlistGrid>
           </Grid>
         </Box>

@@ -1,0 +1,11 @@
+after select table[User role]:
+    - Create orders 
+        if choose menu : 
+            - create order item bind with orderId
+            - get menu data with menuItemId for display on UI
+            - input quantity and update with orderItemId
+        elif delete orders := clear all order item
+        elif delete orderitem := delete orderitem with orderItemId
+    - Click menu
+        if select menu && input quantity:
+            - create order item bind with orderId

@@ -1,4 +1,4 @@
-class Orders {
+class Order {
   constructor(id, tableNumber, orderDate, status) {
     this.id = id;
     this.tableNumber = tableNumber;
@@ -6,7 +6,7 @@ class Orders {
     this.status = status;
   }
   static fromMap(map) {
-    return new Orders(map.id, map.tableNumber, map.orderDate, map.status);
+    return new Order(map.id, map.tableNumber, map.orderDate, map.status);
   }
   toMap() {
     return {
@@ -18,4 +18,4 @@ class Orders {
   }
 }
 
-export default Orders
+export default Order;
