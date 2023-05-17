@@ -213,8 +213,8 @@ class DataBase {
     this.orderItems.push(map);
   }
 
-  readOrderItem() {
-    return this.createOrderItem;
+  readOrderItems() {
+    return this.orderItems;
   }
   updateOrderItem(map) {
     let copyOrderItems = [...this.orderItems];
