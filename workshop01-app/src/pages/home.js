@@ -1,13 +1,19 @@
-import { Button, Box, Typography, Grid, IconButton } from "@mui/material";
+import {
+  Button,
+  Box,
+  Typography,
+  Grid,
+  IconButton,
+  MenuItem,
+  TextField,
+} from "@mui/material";
 import {
   SearchOutlined,
   QrCodeScannerOutlined,
   SettingsOutlined,
   LocalShippingOutlined,
   FastfoodOutlined,
-  CakeOutlined,
   CoffeeOutlined,
-  BakeryDiningOutlined,
   Pets,
 } from "@mui/icons-material";
 import {
@@ -23,26 +29,28 @@ import {
 import { use100vh } from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  increase,
-  decrease,
-  remove,
-  totalize,
-  addTocart,
-  removeFromcart,
-} from "@/store/feature/homecontroller";
+  createOrder,
+  createOrderItem,
+  deleteOrderItem,
+  totalPrice,
+  updateOrderItem,
+  deleteTableNumber,
+} from "../store/feature/homecontroller";
 import { useState, useEffect } from "react";
-import { Modal, Backdrop, Fade } from "@mui/material";
-import OrderItem from "@/model/orderitem";
+import { Modal } from "@mui/material";
+
 const Home = () => {
   const dispatch = useDispatch();
+  dispatch(totalPrice());
   const height = use100vh();
-  const total = 0;
   const menu = useSelector((state) => state.homecontroller.menu);
+  const table = useSelector((state) => state.homecontroller.table);
+  const totalprice = useSelector((state) => state.homecontroller.totalPrice);
+  const [selectTable, setSelectTable] = useState(table[0]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   useEffect(() => handleOpen(), []);
-
   return (
     <Box
       sx={{
@@ -66,23 +74,54 @@ const Home = () => {
         <Box
           sx={{
             borderRadius: "5px",
-            width: "50%",
+            width: "30%",
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
             color: "black",
             textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Select table
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-          <Button sx={{ color: "black" }} onClick={handleClose}>
-            submit
-          </Button>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              let tableNumber = e.target.value;
+              dispatch((disp) => {
+                disp(deleteTableNumber(table.indexOf(tableNumber)));
+                disp(createOrder(tableNumber));
+              });
+              handleClose();
+            }}
+          >
+            <TextField
+              onChange={(e) => {
+                setSelectTable(e.target.value);
+              }}
+              value={selectTable}
+              variant="standard"
+              select
+              label="Select"
+              helperText="Please select your table"
+              sx={{
+                width: "70%",
+              }}
+            >
+              {table.map((item, index) => (
+                <MenuItem key={index} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </TextField>
+            <Button sx={{ color: "black" }} type="submit">
+              submit
+            </Button>
+          </form>
         </Box>
       </Modal>
       <Box
@@ -176,7 +215,7 @@ const Home = () => {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "space-between",
               }}
             >
               <IconButton
@@ -211,13 +250,13 @@ const Home = () => {
                 <MenuCard
                   model={item}
                   key={index}
-                  onClick={() => console.log("Hello")}
+                  onClick={() => dispatch(createOrderItem(item.id))}
                 />
               ))}
             </MenulistGrid>
-            <OrderlistGrid totalValue={parseFloat(total).toFixed(2)}>
-              <OrderItemField></OrderItemField>
-            </OrderlistGrid>
+            <OrderlistGrid
+              totalValue={parseFloat(totalprice).toFixed(2)}
+            ></OrderlistGrid>
           </Grid>
         </Box>
       </Box>
