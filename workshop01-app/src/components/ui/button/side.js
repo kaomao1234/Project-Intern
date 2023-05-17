@@ -1,5 +1,5 @@
 import { Button, Box, Typography } from "@mui/material";
-const cuisince = (props) => (
+const side = (props) => (
   <Button
     onClick={props.onClick}
     sx={{
@@ -21,4 +21,4 @@ const cuisince = (props) => (
   </Button>
 );
 
-export default cuisince;
+export default side;

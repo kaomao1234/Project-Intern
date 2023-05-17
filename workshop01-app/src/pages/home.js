@@ -11,13 +11,14 @@ import {
   Pets,
 } from "@mui/icons-material";
 import {
-  CuisineButton,
+  SideButton,
   LeadingImageButton,
   TextFieldIcon,
   MenuCard,
   MenulistGrid,
   OrderlistGrid,
-  OrderItemField
+  OrderItemField,
+  // OrderItemField
 } from "../components";
 import { use100vh } from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,19 +30,61 @@ import {
   addTocart,
   removeFromcart,
 } from "@/store/feature/homecontroller";
+import { useState, useEffect } from "react";
+import { Modal, Backdrop, Fade } from "@mui/material";
+import OrderItem from "@/model/orderitem";
 const Home = () => {
-  const dispatch = useDispatch();;
+  const dispatch = useDispatch();
   const height = use100vh();
   const total = 0;
   const menu = useSelector((state) => state.homecontroller.menu);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  useEffect(() => handleOpen(), []);
+
   return (
     <Box
       sx={{
         height: `${height}px`,
         display: "flex",
         flexDirection: "row",
+        overflow: "auto",
       }}
     >
+      <Modal
+        disableAutoFocus
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            borderRadius: "5px",
+            width: "50%",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            color: "black",
+            textAlign: "center",
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Select table
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          </Typography>
+          <Button sx={{ color: "black" }} onClick={handleClose}>
+            submit
+          </Button>
+        </Box>
+      </Modal>
       <Box
         sx={{
           height: `${height}px`,
@@ -61,12 +104,10 @@ const Home = () => {
             marginTop: "20px",
           }}
         ></Pets>
-        <CuisineButton icon={FastfoodOutlined} text="Food" />
+        <SideButton icon={FastfoodOutlined} text="Food" />
 
-        <CuisineButton icon={CoffeeOutlined} text="Drinks" />
-        <CuisineButton icon={BakeryDiningOutlined} text="Snack" />
-        <CuisineButton icon={CakeOutlined} text="Dessert" />
-        <CuisineButton icon={LocalShippingOutlined} text="Package" />
+        <SideButton icon={CoffeeOutlined} text="Drinks" />
+        <SideButton icon={LocalShippingOutlined} text="Package" />
       </Box>
       <Box
         sx={{
@@ -175,6 +216,7 @@ const Home = () => {
               ))}
             </MenulistGrid>
             <OrderlistGrid totalValue={parseFloat(total).toFixed(2)}>
+              <OrderItemField></OrderItemField>
             </OrderlistGrid>
           </Grid>
         </Box>
