@@ -1,30 +1,47 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HomeViewModel } from "../../../viewmodel";
-const viewmodel = new HomeViewModel();
+var viewmodel = new HomeViewModel();
 export const homeControllerSlice = createSlice({
   name: "homecontroller",
   initialState: {
-    totalPrice: 0,
-    orders: viewmodel.orders,
     menu: viewmodel.menu,
+    totalPrice: 0,
+    orderItems: [],
+    table: [1, 2, 3, 4, 5],
   },
   reducers: {
-    increase: (state, action) => {},
-    decrease: (state, action) => {},
-    remove: (state, action) => {},
-    totalize: (state) => {},
-    addTocart: (state, action) => {},
-    removeFromcart: (state, action) => {},
+    createOrder: (state, action) => {
+      viewmodel.createOrder(action.payload);
+    },
+
+    createOrderItem: (state, action) => {
+      viewmodel.createOrderItem(action.payload);
+      state.orderItems = viewmodel.readOrderItems();
+    },
+    updateOrderItem: (state, action) => {
+      viewmodel.updateOrderItem(action.payload);
+      state.orderItems = viewmodel.readOrderItems();
+    },
+    deleteOrderItem: (state, action) => {
+      viewmodel.deleteOrderItem(action.payload.id);
+      state.orderItems = viewmodel.readOrderItems();
+    },
+    totalPrice: (state) => {
+      state.totalPrice = viewmodel.totalPrice();
+    },
+    deleteTableNumber: (state, action) => {
+      state.table.splice(action.payload);
+    },
   },
 });
 
 export const {
-  increase,
-  decrease,
-  remove,
-  totalize,
-  addTocart,
-  removeFromcart,
+  createOrder,
+  createOrderItem,
+  updateOrderItem,
+  deleteOrderItem,
+  totalPrice,
+  deleteTableNumber,
 } = homeControllerSlice.actions;
 
 export default homeControllerSlice.reducer;
