@@ -184,9 +184,17 @@ class DataBase {
       },
     ];
     this.orderList = [];
+    this.orderItems = [];
   }
+  readAllMenu() {
+    return this.menu;
+  }
+
   createOrder(map) {
     this.orderList.push(map);
+  }
+  readOrder() {
+    return this.orderList;
   }
   updateOrder(map) {
     let copyOrderList = [...this.orderList];
@@ -194,15 +202,31 @@ class DataBase {
     copyOrderList[selectedIndex] = map;
     this.orderList = copyOrderList;
   }
-  readAllMenu() {
-    return this.menu;
-  }
-  
   deleteOrder(id) {
     let copyOrderList = [...this.orderList];
-    var selectedIndex = copyOrderList.findIndex((item) => item.id == map.id);
+    var selectedIndex = copyOrderList.findIndex((item) => item.id == id);
     copyOrderList.splice(selectedIndex, 1);
     this.orderList = copyOrderList;
+  }
+
+  createOrderItem(map) {
+    this.orderItems.push(map);
+  }
+
+  readOrderItem() {
+    return this.createOrderItem;
+  }
+  updateOrderItem(map) {
+    let copyOrderItems = [...this.orderItems];
+    var selectedIndex = copyOrderItems.findIndex((item) => item.id == map.id);
+    copyOrderItems[selectedIndex] = map;
+    this.orderItems = copyOrderItems;
+  }
+  deleteOrderItem(id) {
+    let copyOrderItems = [...this.orderItems];
+    var selectedIndex = copyOrderItems.findIndex((item) => item.id == id);
+    copyOrderItems.splice(selectedIndex, 1);
+    this.orderItems = copyOrderItems;
   }
 }
 
