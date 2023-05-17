@@ -60,7 +60,7 @@ const MenuCard = (props) => {
                   borderRadius: "5px",
                 }}
               >
-                {model.menuName}
+                {model.name}
               </Typography>
             </Box>
           </Stack>
