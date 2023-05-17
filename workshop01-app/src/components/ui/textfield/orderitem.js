@@ -12,7 +12,14 @@ import {
   ModeEditOutline,
 } from "@mui/icons-material";
 const orderitem = (props) => {
-  let model = props.model;
+  let model =
+    props.model == undefined
+      ? {
+          name: "Untitle",
+          price: "100",
+          quantity: "10",
+        }
+      : props.model;
   return (
     <Box
       sx={{
@@ -56,18 +63,19 @@ const orderitem = (props) => {
             fontSize: "13",
           }}
         >
-          {10}THB
+          {model.price}THB
         </Typography>
       </Box>
       <TextField
         id="input-with-sx"
         variant="outlined"
-        value={10}
+        value={model.quantity}
         sx={{
-          "& .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "red",
-          },
-          // borderColor: "#F95F66 !important",
+          "& .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+            {
+              borderColor: "#F95F66",
+            },
+          width: "40%",
         }}
         InputProps={{
           endAdornment: (
@@ -90,7 +98,7 @@ const orderitem = (props) => {
           width: "100px",
         }}
       >
-        {parseFloat(0).toFixed(2)}THB
+        {parseFloat(model.quantity * model.price).toFixed(2)}THB
       </Typography>
     </Box>
   );
