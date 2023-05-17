@@ -25,7 +25,6 @@ const orderitem = (props) => {
       }}
     >
       <IconButton
-        onClick={props.onRemoveClick}
         sx={{
           color: "#F95F66",
           ":hover": {
@@ -49,7 +48,7 @@ const orderitem = (props) => {
             color: "black",
           }}
         >
-          {model.menuName}
+          Pasta
         </Typography>
         <Typography
           sx={{
@@ -57,26 +56,26 @@ const orderitem = (props) => {
             fontSize: "13",
           }}
         >
-          {model.price}THB
+          {10}THB
         </Typography>
       </Box>
       <TextField
         id="input-with-sx"
         variant="outlined"
-        value={model.numberMenu}
-        InputProps={{
-          style: {
-            ".Mui-focused":{
-              borderColor:"red"
-            },
-            borderColor:"#F95F66 !important"
+        value={10}
+        sx={{
+          "& .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "red",
           },
+          // borderColor: "#F95F66 !important",
+        }}
+        InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={props.onDecreaseClick}>
+              <IconButton>
                 <Remove />
               </IconButton>
-              <IconButton onClick={props.onIncreaseClick}>
+              <IconButton>
                 <Add />
               </IconButton>
             </InputAdornment>
@@ -91,7 +90,7 @@ const orderitem = (props) => {
           width: "100px",
         }}
       >
-        {parseFloat(model.price * model.numberMenu).toFixed(2)}THB
+        {parseFloat(0).toFixed(2)}THB
       </Typography>
     </Box>
   );
