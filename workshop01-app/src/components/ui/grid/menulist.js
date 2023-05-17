@@ -8,7 +8,7 @@ const menulist = (props) => {
       md={12}
       lg={7}
       sx={{
-        maxHeight: `calc(100vh * 0.8)`,
+        maxHeight: `calc(100vh * 0.82)`,
         overflowY: "auto",
         "&::-webkit-scrollbar": {
           width: "8px",
