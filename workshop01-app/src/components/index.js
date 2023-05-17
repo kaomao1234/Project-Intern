@@ -1,4 +1,4 @@
-export { default as CuisineButton } from "./ui/button/cuisine";
+export { default as SideButton } from "./ui/button/side";
 export { default as TextFieldIcon } from "./ui/textfield/textfieldicon";
 export { default as LeadingImageButton } from "./ui/button/leadingimage";
 export { default as MenuCard } from "./ui/card/menu";
