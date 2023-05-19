@@ -1,6 +1,6 @@
 import { Button, Typography, CardMedia } from "@mui/material";
 
-const leadingimage = (props) => (
+const LeadingImage = (props) => (
   <Button
     onClick={props.onClick}
     variant="contained"
@@ -33,4 +33,4 @@ const leadingimage = (props) => (
     </Typography>
   </Button>
 );
-export default leadingimage;
+export default LeadingImage;
