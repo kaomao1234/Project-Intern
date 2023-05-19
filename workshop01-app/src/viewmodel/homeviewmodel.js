@@ -5,7 +5,6 @@ class HomeViewModel {
   constructor() {
     this.db = new DataBase();
     this.menu = this.db.readAllMenu();
-    this.currentOrderId = null;
     this.options = {
       weekday: "long",
       month: "long",
@@ -29,9 +28,9 @@ class HomeViewModel {
   }
 
   createOrder(tableNumber) {
+    this.currentTableNumber = tableNumber;
     let orderId = generateUID();
-    this.currentOrderId = orderId;
-    
+
     const date = Date.now();
     let formattedDate = Intl.DateTimeFormat("en-US", this.options).format(date);
     this.db.createOrder(
@@ -44,10 +43,13 @@ class HomeViewModel {
     );
   }
 
-  createOrderItem(menuItemId) {
+  readOrder(table) {
+    return this.db.readOrder().find((item, index) => item.tableNumber == table);
+  }
+  createOrderItem(menuItemId, tableNumber) {
     const model = new OrderItemModel(
       generateUID(),
-      this.currentorderId,
+      this.readOrder(tableNumber).id,
       menuItemId,
       1
     );
