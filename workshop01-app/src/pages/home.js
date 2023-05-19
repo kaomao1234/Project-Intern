@@ -21,36 +21,20 @@ import {
   LeadingImageButton,
   TextFieldIcon,
   MenuCard,
-  MenulistGrid,
-  OrderlistGrid,
+  MenuListGrid,
+  OrderListGrid,
   OrderItemField,
-  // OrderItemField
+  TableSelectorModal,
 } from "../components";
 import { use100vh } from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  createOrder,
-  createOrderItem,
-  deleteOrderItem,
-  totalPrice,
-  updateOrderItem,
-  deleteTableNumber,
-} from "../store/feature/homecontroller";
-import { useState, useEffect } from "react";
-import { Modal } from "@mui/material";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 const Home = () => {
-  const dispatch = useDispatch();
-  dispatch(totalPrice());
   const height = use100vh();
-  const menu = useSelector((state) => state.homecontroller.menu);
-  const table = useSelector((state) => state.homecontroller.table);
-  const totalprice = useSelector((state) => state.homecontroller.totalPrice);
-  const [selectTable, setSelectTable] = useState(table[0]);
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  useEffect(() => handleOpen(), []);
+  const table = [1, 2, 3, 4, 5];
+  const totalPrice = 0;
   return (
     <Box
       sx={{
@@ -60,70 +44,10 @@ const Home = () => {
         overflow: "auto",
       }}
     >
-      <Modal
-        disableAutoFocus
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        open={open}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            borderRadius: "5px",
-            width: "30%",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            color: "black",
-            textAlign: "center",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Select table
-          </Typography>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              let tableNumber = e.target.value;
-              dispatch((disp) => {
-                disp(deleteTableNumber(table.indexOf(tableNumber)));
-                disp(createOrder(tableNumber));
-              });
-              handleClose();
-            }}
-          >
-            <TextField
-              onChange={(e) => {
-                setSelectTable(e.target.value);
-              }}
-              value={selectTable}
-              variant="standard"
-              select
-              label="Select"
-              helperText="Please select your table"
-              sx={{
-                width: "70%",
-              }}
-            >
-              {table.map((item, index) => (
-                <MenuItem key={index} value={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </TextField>
-            <Button sx={{ color: "black" }} type="submit">
-              submit
-            </Button>
-          </form>
-        </Box>
-      </Modal>
+      <TableSelectorModal
+        table={table}
+        onSelect={(table) => dispatch(createOrder(table))}
+      />
       <Box
         sx={{
           height: `${height}px`,
@@ -245,18 +169,14 @@ const Home = () => {
         </Box>
         <Box sx={{ marginX: "12px", marginTop: "20px" }}>
           <Grid container spacing={2} sx={{}}>
-            <MenulistGrid>
-              {menu.map((item, index) => (
-                <MenuCard
-                  model={item}
-                  key={index}
-                  onClick={() => dispatch(createOrderItem(item.id))}
-                />
-              ))}
-            </MenulistGrid>
-            <OrderlistGrid
-              totalValue={parseFloat(totalprice).toFixed(2)}
-            ></OrderlistGrid>
+            <MenuListGrid>
+              {/* {menu.map((item, index) => (
+                <MenuCard model={item} key={index} />
+              ))} */}
+            </MenuListGrid>
+            <OrderListGrid
+              totalValue={parseFloat(totalPrice).toFixed(2)}
+            ></OrderListGrid>
           </Grid>
         </Box>
       </Box>
