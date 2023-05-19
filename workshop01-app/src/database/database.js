@@ -1,6 +1,13 @@
 import { generateUID } from "../utils";
+import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
 class DataBase {
   constructor() {
+    const firebaseConfig = {
+      databaseURL: "https://mini-projectintern-default-rtdb.firebaseio.com/",
+    };
+    const app = initializeApp(firebaseConfig);
+    this.database = getDatabase(app);
     this.menu = [
       {
         id: generateUID(),
