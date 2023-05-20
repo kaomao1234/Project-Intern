@@ -14,7 +14,7 @@ class HomeViewModel {
     // this.getMenu();
   }
 
-  getMenu(event) {
+  readMenu(event) {
     const result = [];
     if (this.menu.length > 0) {
       event();
