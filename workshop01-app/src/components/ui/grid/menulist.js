@@ -20,7 +20,7 @@ const menulist = (props) => {
         },
       }}
     >
-      <Grid container spacing={4} sx={{}}>
+      <Grid container spacing={4}>
         {props.children}
       </Grid>
     </Grid>
