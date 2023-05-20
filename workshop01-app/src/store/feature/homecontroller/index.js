@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { HomeViewModel } from "../../../viewmodel";
 export const homeControllerSlice = createSlice({
   name: "homecontroller",
-  initialState: {},
+  initialState: {
+    viewmodel: new HomeViewModel(),
+  },
   reducers: {},
 });
 
