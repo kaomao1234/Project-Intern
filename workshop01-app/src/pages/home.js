@@ -28,13 +28,17 @@ import {
 } from "../components";
 import { use100vh } from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
-
 const Home = () => {
   const height = use100vh();
   const table = [1, 2, 3, 4, 5];
   const totalPrice = 0;
+  const viewmodel = useSelector((state) => state.homecontroller.viewmodel);
+  const [menu, setMenu] = useState(viewmodel.menu);
+  if (viewmodel.menu.length == 0) {
+    viewmodel.readMenu(() => setMenu(viewmodel.menu));
+  }
   return (
     <Box
       sx={{
@@ -46,7 +50,7 @@ const Home = () => {
     >
       <TableSelectorModal
         table={table}
-        onSelect={(table) => dispatch(createOrder(table))}
+        onSelect={(table) => viewmodel.current.createOrder(table)}
       />
       <Box
         sx={{
@@ -143,6 +147,7 @@ const Home = () => {
               }}
             >
               <IconButton
+                onClick={() => console.log()}
                 variant="text"
                 sx={{
                   color: "GrayText",
@@ -170,9 +175,11 @@ const Home = () => {
         <Box sx={{ marginX: "12px", marginTop: "20px" }}>
           <Grid container spacing={2} sx={{}}>
             <MenuListGrid>
-              {/* {menu.map((item, index) => (
-                <MenuCard model={item} key={index} />
-              ))} */}
+              {!menu ? (
+                <Typography sx={{ color: "black" }}>No data</Typography>
+              ) : (
+                menu.map((item, index) => <MenuCard key={index} model={item} />)
+              )}
             </MenuListGrid>
             <OrderListGrid
               totalValue={parseFloat(totalPrice).toFixed(2)}
