@@ -19,7 +19,6 @@ const MenuCardStyle = styled(Card)({
 
 const MenuCard = (props) => {
   const model = props.model;
-
   return (
     <Grid item xs={12} md={4} sm={6} lg={4}>
       <MenuCardStyle onClick={props.onClick}>
