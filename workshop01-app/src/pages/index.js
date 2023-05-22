@@ -1,5 +1,5 @@
 import Home from "./home";
-import MenuDetailsPage from "./menudetial";
+import MenuDetailsPage from "./menudetail";
 import ManageOrder from "./manageorder";
 
 const App = () => {
