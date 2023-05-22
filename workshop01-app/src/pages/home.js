@@ -26,19 +26,25 @@ import {
   OrderItemField,
   TableSelectorModal,
 } from "../components";
+import { setSession } from "../store/feature/session";
 import { use100vh } from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/router";
+import { useRouter, withRouter } from "next/router";
+import { readMenu, createOrder } from "../store/feature/homeviewmodel";
 const Home = () => {
   const height = use100vh();
   const table = [1, 2, 3, 4, 5];
   const totalPrice = 0;
-  const viewmodel = useSelector((state) => state.homecontroller.viewmodel);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const viewmodel = useSelector((state) => state.homeviewmodel.value);
+  // const viewmodel = useSelector((state) => state.homecontroller.viewmodel());
   const [menu, setMenu] = useState(viewmodel.menu);
-  if (viewmodel.menu.length == 0) {
-    viewmodel.readMenu(() => setMenu(viewmodel.menu));
+  if (menu.length == 0) {
+    viewmodel.readMenu((value) => setMenu(value));
   }
+  // console.log(menu);
   return (
     <Box
       sx={{
@@ -50,7 +56,7 @@ const Home = () => {
     >
       <TableSelectorModal
         table={table}
-        onSelect={(table) => viewmodel.current.createOrder(table)}
+        onSelect={(table) => viewmodel.createOrder(table)}
       />
       <Box
         sx={{
@@ -175,10 +181,19 @@ const Home = () => {
         <Box sx={{ marginX: "12px", marginTop: "20px" }}>
           <Grid container spacing={2} sx={{}}>
             <MenuListGrid>
-              {!menu ? (
-                <Typography sx={{ color: "black" }}>No data</Typography>
+              {menu.length == 0 ? (
+                <Typography sx={{ color: "black" }}>No menu data</Typography>
               ) : (
-                menu.map((item, index) => <MenuCard key={index} model={item} />)
+                menu.map((item, index) => (
+                  <MenuCard
+                    key={index}
+                    model={item}
+                    onClick={() => {
+                      router.push("/menudetail");
+                      dispatch(setSession(item.toMap()));
+                    }}
+                  />
+                ))
               )}
             </MenuListGrid>
             <OrderListGrid
@@ -191,4 +206,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default withRouter(Home);
