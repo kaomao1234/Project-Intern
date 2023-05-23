@@ -11,6 +11,7 @@ import {
   Remove,
   ModeEditOutline,
 } from "@mui/icons-material";
+import { useState, useEffect } from "react";
 const orderitem = (props) => {
   let model =
     props.model == undefined
@@ -20,6 +21,7 @@ const orderitem = (props) => {
           quantity: "10",
         }
       : props.model;
+  let menu = props.menu;
   return (
     <Box
       sx={{
@@ -55,7 +57,7 @@ const orderitem = (props) => {
             color: "black",
           }}
         >
-          Pasta
+          {menu.name}
         </Typography>
         <Typography
           sx={{
@@ -63,7 +65,7 @@ const orderitem = (props) => {
             fontSize: "13",
           }}
         >
-          {model.price}THB
+          {menu.price}THB
         </Typography>
       </Box>
       <TextField
@@ -80,10 +82,24 @@ const orderitem = (props) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  if (model.quantity > 1) {
+                    model.quantity--;
+                  }
+                  props.onClick(model);
+                }}
+              >
                 <Remove />
               </IconButton>
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  if (model.quantity < 20) {
+                    model.quantity++;
+                  }
+                  props.onClick(model);
+                }}
+              >
                 <Add />
               </IconButton>
             </InputAdornment>
@@ -98,7 +114,7 @@ const orderitem = (props) => {
           width: "100px",
         }}
       >
-        {parseFloat(model.quantity * model.price).toFixed(2)}THB
+        {parseFloat(model.quantity * menu.price).toFixed(2)}THB
       </Typography>
     </Box>
   );
