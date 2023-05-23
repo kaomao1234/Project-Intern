@@ -11,19 +11,23 @@ import {
   IconButton,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
-import { withRouter } from "next/router";
+import { useRouter, withRouter } from "next/router";
 import { useSelector } from "react-redux";
-
+import { MenuDetailViewModel } from "@/viewmodel";
+const viewmodel = new MenuDetailViewModel();
 const MenuDetailPage = () => {
-  const model = useSelector((state) => state.session.value);
+  const model = useSelector((state) => state.session.value.model);
+  const tableNumber = useSelector((state) => state.session.value.table);
   const [quantity, setQuantity] = useState(1); // State for quantity
-
+  const router = useRouter();
   const handleQuantityChange = (value) => {
     setQuantity(value);
   };
 
   const handleAddToCart = () => {
     // Add logic to handle adding to cart with the selected quantity
+    viewmodel.createOrderItem(model.id, quantity, tableNumber);
+    router.push("/home");
   };
 
   return (
@@ -58,9 +62,10 @@ const MenuDetailPage = () => {
                   variant="outlined"
                   value={quantity}
                   sx={{
-                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#F95F66",
-                    },
+                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                      {
+                        borderColor: "#F95F66",
+                      },
                     width: "150px",
                   }}
                   InputProps={{
