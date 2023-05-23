@@ -1,18 +1,18 @@
 class OrderItem {
-  constructor(id, orderId, menuItemId, quantity) {
+  constructor(id, orderId, menuId, quantity) {
     this.id = id;
     this.orderId = orderId;
-    this.menuItemId = menuItemId;
+    this.menuId = menuId;
     this.quantity = quantity;
   }
   static fromMap(map) {
-    return new OrderItem(map.id, map.orderId, map.menuItemId, map.quantity);
+    return new OrderItem(map.id, map.orderId, map.menuId, map.quantity);
   }
   toMap() {
     return {
       id: this.id,
       orderId: this.orderId,
-      menuItemId: this.menuItemId,
+      menuId: this.menuId,
       quantity: this.quantity,
     };
   }
