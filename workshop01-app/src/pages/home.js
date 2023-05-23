@@ -31,20 +31,28 @@ import { use100vh } from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import { useRouter, withRouter } from "next/router";
-import { readMenu, createOrder } from "../store/feature/homeviewmodel";
+import { HomeViewModel } from "../viewmodel";
+const viewmodel = new HomeViewModel();
 const Home = () => {
   const height = use100vh();
   const table = [1, 2, 3, 4, 5];
   const totalPrice = 0;
   const router = useRouter();
   const dispatch = useDispatch();
-  const viewmodel = useSelector((state) => state.homeviewmodel.value);
-  // const viewmodel = useSelector((state) => state.homecontroller.viewmodel());
-  const [menu, setMenu] = useState(viewmodel.menu);
-  if (menu.length == 0) {
-    viewmodel.readMenu((value) => setMenu(value));
-  }
-  // console.log(menu);
+  const [menus, setMenus] = useState(viewmodel.getMenus());
+  const [orderItems, setOrderItems] = useState(viewmodel.getOrderItems());
+  const tableNumber = useSelector((state) => state.session.value.table);
+  viewmodel.observers.push(
+    ...[
+      () => setMenus(viewmodel.getMenus()),
+      () => setOrderItems(viewmodel.getOrderItems()),
+    ]
+  );
+  viewmodel.readMenu();
+  tableNumber != undefined
+    ? viewmodel.getOrderItemFromTableNumber(tableNumber)
+    : null;
+  // console.log(viewmodel.getMenus());
   return (
     <Box
       sx={{
@@ -54,10 +62,17 @@ const Home = () => {
         overflow: "auto",
       }}
     >
-      <TableSelectorModal
-        table={table}
-        onSelect={(table) => viewmodel.createOrder(table)}
-      />
+      {tableNumber == undefined ? (
+        <TableSelectorModal
+          table={table}
+          onSelect={(table) => {
+            // if()
+            viewmodel.getOrderItemFromTableNumber(table);
+            dispatch(setSession({ table: table }));
+            viewmodel.createOrder(table);
+          }}
+        />
+      ) : null}
       <Box
         sx={{
           height: `${height}px`,
@@ -181,24 +196,33 @@ const Home = () => {
         <Box sx={{ marginX: "12px", marginTop: "20px" }}>
           <Grid container spacing={2} sx={{}}>
             <MenuListGrid>
-              {menu.length == 0 ? (
-                <Typography sx={{ color: "black" }}>No menu data</Typography>
+              {menus.length == 0 ? (
+                <Typography sx={{ color: "black" }}>No menus data</Typography>
               ) : (
-                menu.map((item, index) => (
+                menus.map((item, index) => (
                   <MenuCard
                     key={index}
                     model={item}
                     onClick={() => {
                       router.push("/menudetail");
-                      dispatch(setSession(item.toMap()));
+                      dispatch(setSession({ model: item.ToMap() }));
                     }}
                   />
                 ))
               )}
             </MenuListGrid>
-            <OrderListGrid
-              totalValue={parseFloat(totalPrice).toFixed(2)}
-            ></OrderListGrid>
+            <OrderListGrid totalValue={parseFloat(totalPrice).toFixed(2)}>
+              {menus.lenght != 0
+                ? orderItems.map((item, index) => (
+                    <OrderItemField
+                      onClick={(model) => viewmodel.updateOrderItem(model)}
+                      key={index}
+                      model={item}
+                      menu={viewmodel.menus[item.menuId]}
+                    />
+                  ))
+                : null}
+            </OrderListGrid>
           </Grid>
         </Box>
       </Box>
