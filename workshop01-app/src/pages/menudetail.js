@@ -30,6 +30,19 @@ const MenuDetailPage = () => {
     router.push("/home");
   };
 
+  if (model == undefined) {
+    return (
+      <Typography
+        variant="h1"
+        sx={{
+          color: "black",
+        }}
+      >
+        Back
+      </Typography>
+    );
+  }
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
