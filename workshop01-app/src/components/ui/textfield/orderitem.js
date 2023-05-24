@@ -36,6 +36,7 @@ const orderitem = (props) => {
       }}
     >
       <IconButton
+        onClick={props.onDeleteClick}
         sx={{
           color: "#F95F66",
           ":hover": {
