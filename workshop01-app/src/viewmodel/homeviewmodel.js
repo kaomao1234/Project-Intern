@@ -1,6 +1,8 @@
+import { ThirtyFpsTwoTone } from "@mui/icons-material";
 import { DataBase } from "../database";
 import { MenuItemModel, OrderItemModel } from "../model";
 import { generateUID, OrderStatus, ObjTool } from "../utils";
+import { useSelector } from "react-redux";
 class HomeViewModel {
   constructor() {
     this.db = new DataBase();
@@ -58,6 +60,11 @@ class HomeViewModel {
     return result;
   }
 
+  async deleteOrderItem(orderItemId,tableNumber) {
+    await this.db.delete(`orderItems/${orderItemId}`);
+    this.getOrderItemFromTableNumber(tableNumber);
+    this.notifyObservers();
+  }
   async updateOrderItem(model) {
     await this.db.update(`orderItems/${model.id}`, {
       menuId: model.menuId,
