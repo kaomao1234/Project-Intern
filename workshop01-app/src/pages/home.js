@@ -36,23 +36,40 @@ const viewmodel = new HomeViewModel();
 const Home = () => {
   const height = use100vh();
   const table = [1, 2, 3, 4, 5];
-  const totalPrice = 0;
   const router = useRouter();
   const dispatch = useDispatch();
-  const [menus, setMenus] = useState(viewmodel.getMenus());
-  const [orderItems, setOrderItems] = useState(viewmodel.getOrderItems());
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [menus, setMenus] = useState([]);
+  const [orderItems, setOrderItems] = useState([]);
   const tableNumber = useSelector((state) => state.session.value.table);
-  viewmodel.observers.push(
-    ...[
-      () => setMenus(viewmodel.getMenus()),
-      () => setOrderItems(viewmodel.getOrderItems()),
-    ]
-  );
+
+  viewmodel.observers = [
+    () => {
+      let getMenu = JSON.stringify(viewmodel.getMenus());
+      if (JSON.stringify(menus) != getMenu) {
+        setMenus(getMenu);
+        console.log("call menu");
+      }
+    },
+    () => {
+      let getOrderItems = JSON.stringify(viewmodel.getOrderItems());
+      if (JSON.stringify(orderItems) != getOrderItems) {
+        setOrderItems(getOrderItems);
+        console.log("call orderitems");
+      }
+    },
+    () => {
+      let getTotalPrice = viewmodel.getTotalPrice();
+      if (totalPrice != getTotalPrice) {
+        setTotalPrice(getTotalPrice);
+        console.log("call total price");
+      }
+    },
+  ];
   viewmodel.readMenu();
   tableNumber != undefined
     ? viewmodel.getOrderItemFromTableNumber(tableNumber)
     : null;
-  // console.log(viewmodel.getMenus());
   return (
     <Box
       sx={{
@@ -66,7 +83,6 @@ const Home = () => {
         <TableSelectorModal
           table={table}
           onSelect={(table) => {
-            // if()
             viewmodel.getOrderItemFromTableNumber(table);
             dispatch(setSession({ table: table }));
             viewmodel.createOrder(table);
@@ -204,15 +220,16 @@ const Home = () => {
                     key={index}
                     model={item}
                     onClick={() => {
+                      console.log(item);
+                      dispatch(setSession({ model: item.toMap() }));
                       router.push("/menudetail");
-                      dispatch(setSession({ model: item.ToMap() }));
                     }}
                   />
                 ))
               )}
             </MenuListGrid>
             <OrderListGrid totalValue={parseFloat(totalPrice).toFixed(2)}>
-              {menus.lenght != 0
+              {orderItems.length != 0 && menus.length != 0
                 ? orderItems.map((item, index) => (
                     <OrderItemField
                       onClick={(model) => viewmodel.updateOrderItem(model)}
