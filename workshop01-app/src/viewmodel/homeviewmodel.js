@@ -1,6 +1,6 @@
 import { DataBase } from "../database";
 import { MenuItemModel, OrderItemModel } from "../model";
-import { generateUID, OrderStatus } from "../utils";
+import { generateUID, OrderStatus, ObjTool } from "../utils";
 class HomeViewModel {
   constructor() {
     this.db = new DataBase();
@@ -13,10 +13,18 @@ class HomeViewModel {
       year: "numeric",
     };
     this.observers = [];
+    this.objTool = new ObjTool();
   }
 
   notifyObservers() {
     this.observers.map((event, index) => event());
+  }
+  getTotalPrice() {
+    let sum = 0;
+    this.getOrderItems().map((item, index) => {
+      sum += this.menus[item.menuId].price * item.quantity;
+    });
+    return sum;
   }
   getOrderItems() {
     let copyOrderItems = Object.entries(this.orderItems);
@@ -49,12 +57,6 @@ class HomeViewModel {
     );
     return result;
   }
-  getMenuFromId(id) {
-    menu = this.menus.find((item) => item.id == id);
-    return {
-      qauntity: 1,
-    };
-  }
 
   async updateOrderItem(model) {
     await this.db.update(`orderItems/${model.id}`, {
@@ -70,9 +72,9 @@ class HomeViewModel {
       const snapshot = await this.db.read("menus");
       if (snapshot.exists()) {
         Object.assign(this.menus, snapshot.val());
-        this.notifyObservers();
       }
     }
+    this.notifyObservers();
 
     return this.menus;
   }
@@ -95,21 +97,21 @@ class HomeViewModel {
 
   async getOrderItemFromTableNumber(tableNumber) {
     let result = {};
-    if (Object.keys(this.orderItems).length == 0) {
-      const orderSnapshot = await this.db.read(`orders/${tableNumber}`);
-      if (orderSnapshot.exists()) {
-        const orderItemSnapshot = await this.db.read("orderItems");
-        if (orderItemSnapshot.exists()) {
-          Object.entries(orderItemSnapshot.val()).forEach(([id, map]) => {
-            this.orderItems = [];
-            if (map.orderId === orderSnapshot.val().id) {
-              this.orderItems[id] = map;
-            }
-          });
-        }
+    const orderSnapshot = await this.db.read(`orders/${tableNumber}`);
+    if (orderSnapshot.exists()) {
+      const orderItemSnapshot = await this.db.read("orderItems");
+      if (orderItemSnapshot.exists()) {
+        Object.entries(orderItemSnapshot.val()).forEach(([id, map]) => {
+          if (map.orderId === orderSnapshot.val().id) {
+            result[id] = map;
+          }
+        });
       }
-      this.notifyObservers();
+      if (this.objTool.deepEqual(result, this.orderItems) == false) {
+        this.orderItems = result;
+      }
     }
+    this.notifyObservers();
   }
 }
 export default HomeViewModel;
