@@ -38,22 +38,25 @@ const Home = () => {
   const table = [1, 2, 3, 4, 5];
   const router = useRouter();
   const dispatch = useDispatch();
+
   const [totalPrice, setTotalPrice] = useState(0);
   const [menus, setMenus] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
   const tableNumber = useSelector((state) => state.session.value.table);
-
+  tableNumber != undefined
+    ? viewmodel.getOrderItemFromTableNumber(tableNumber)
+    : null;
   viewmodel.observers = [
     () => {
-      let getMenu = JSON.stringify(viewmodel.getMenus());
-      if (JSON.stringify(menus) != getMenu) {
+      let getMenu = viewmodel.getMenus();
+      if (JSON.stringify(menus) != JSON.stringify(getMenu)) {
         setMenus(getMenu);
         console.log("call menu");
       }
     },
     () => {
-      let getOrderItems = JSON.stringify(viewmodel.getOrderItems());
-      if (JSON.stringify(orderItems) != getOrderItems) {
+      let getOrderItems = viewmodel.getOrderItems();
+      if (JSON.stringify(orderItems) != JSON.stringify(getOrderItems)) {
         setOrderItems(getOrderItems);
         console.log("call orderitems");
       }
@@ -67,9 +70,6 @@ const Home = () => {
     },
   ];
   viewmodel.readMenu();
-  tableNumber != undefined
-    ? viewmodel.getOrderItemFromTableNumber(tableNumber)
-    : null;
   return (
     <Box
       sx={{
@@ -232,6 +232,9 @@ const Home = () => {
               {orderItems.length != 0 && menus.length != 0
                 ? orderItems.map((item, index) => (
                     <OrderItemField
+                      onDeleteClick={() =>
+                        viewmodel.deleteOrderItem(item.id, tableNumber)
+                      }
                       onClick={(model) => viewmodel.updateOrderItem(model)}
                       key={index}
                       model={item}
