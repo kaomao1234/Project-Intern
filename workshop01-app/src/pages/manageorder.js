@@ -10,6 +10,7 @@ import {
   FormControl,
   Select,
 } from "@mui/material";
+import { ManageOrderViewModel } from "../viewmodel";
 
 const OrderStatus = {
   PENDING: "Pending",
@@ -24,14 +25,16 @@ const OrderStatus = {
   COMPLETED: "Completed",
 };
 
+let viewmodel = new ManageOrderViewModel();
+
 const ManageOrder = () => {
+  viewmodel.readOrderItems();
   const [orders, setOrders] = useState([
     {
       id: "1",
       tableNumber: 1,
       status: OrderStatus.PENDING,
       date: "2023-05-19",
-      time: "14:30",
       totalPrice: 25.99,
     },
     {
@@ -39,7 +42,6 @@ const ManageOrder = () => {
       tableNumber: 2,
       status: OrderStatus.DELIVERED,
       date: "2023-05-19",
-      time: "15:15",
       totalPrice: 12.5,
     },
     // Add more orders as needed
@@ -112,8 +114,7 @@ const ManageOrder = () => {
                       variant="body2"
                       sx={{ color: "#555555", marginBottom: 1 }}
                     >
-                      <strong>Order Date and Time:</strong> {order.date} -{" "}
-                      {order.time}
+                      <strong>Order Date and Time:</strong> {order.date}
                     </Typography>
                     <Typography
                       component={"span"}
