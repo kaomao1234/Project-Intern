@@ -5,7 +5,7 @@ import ManageOrder from "./manageorder";
 const App = () => {
   return (
     <div>
-      <Home/>
+      <ManageOrder/>
     </div>
   );
 };
