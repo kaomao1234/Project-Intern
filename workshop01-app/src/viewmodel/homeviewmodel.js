@@ -60,7 +60,7 @@ class HomeViewModel {
     return result;
   }
 
-  async deleteOrderItem(orderItemId,tableNumber) {
+  async deleteOrderItem(orderItemId, tableNumber) {
     await this.db.delete(`orderItems/${orderItemId}`);
     this.getOrderItemFromTableNumber(tableNumber);
     this.notifyObservers();
@@ -91,7 +91,8 @@ class HomeViewModel {
     const date = Date.now();
     let formattedDate = Intl.DateTimeFormat("en-US", this.options).format(date);
     const order = await this.db.read(`orders/${table}`);
-    if (order.exists()) {
+    console.log(order.exists());
+    if (order.exists() == false) {
       if (order.val() == null) {
         this.db.create(`orders/${table}`, {
           id: orderId,
