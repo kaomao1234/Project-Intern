@@ -29,30 +29,24 @@ let viewmodel = new ManageOrderViewModel();
 
 const ManageOrder = () => {
   viewmodel.readOrderItems();
-  const [orders, setOrders] = useState([
-    {
-      id: "1",
-      tableNumber: 1,
-      status: OrderStatus.PENDING,
-      date: "2023-05-19",
-      totalPrice: 25.99,
+  viewmodel.readMenu();
+  const [orders, setOrders] = useState([]);
+  viewmodel.observers = [
+    () => {
+      let data = viewmodel.getOrderItems();
+      if (JSON.stringify(data) != JSON.stringify(orders)) {
+        setOrders(data);
+      }
     },
-    {
-      id: "2",
-      tableNumber: 2,
-      status: OrderStatus.DELIVERED,
-      date: "2023-05-19",
-      totalPrice: 12.5,
-    },
-    // Add more orders as needed
-  ]);
-
-  const handleStatusChange = (orderId, newStatus) => {
-    setOrders((prevOrders) =>
-      prevOrders.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      )
-    );
+  ];
+  const handleStatusChange = (tableNumber, newStatus) => {
+    // console.log(tableNumber, newStatus);
+    viewmodel.updateOrder(tableNumber, { status: newStatus });
+    // setOrders((prevOrders) =>
+    //   prevOrders.map((order) =>
+    //     order.id === orderId ? { ...order, status: newStatus } : order
+    //   )
+    // );
   };
 
   const handleSubmitStatus = (orderId) => {
@@ -72,9 +66,9 @@ const ManageOrder = () => {
         <Typography variant="body2">No orders available.</Typography>
       ) : (
         <List>
-          {orders.map((order) => (
+          {orders.map((order, index) => (
             <ListItem
-              key={order.id}
+              key={index}
               sx={{
                 marginBottom: 2,
                 border: "1px solid #ccc",
@@ -100,7 +94,7 @@ const ManageOrder = () => {
                       variant="body2"
                       sx={{ color: "#555555", marginBottom: 1 }}
                     >
-                      <strong>Order ID:</strong> {order.id}
+                      <strong>Order ID:</strong> {order.orderId}
                     </Typography>
                     <Typography
                       component={"span"}
@@ -129,7 +123,9 @@ const ManageOrder = () => {
               <FormControl>
                 <Select
                   value={order.status}
-                  onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                  onChange={(e) =>
+                    handleStatusChange(order.tableNumber, e.target.value)
+                  }
                   sx={{
                     marginLeft: "auto",
                     minWidth: "120px",
@@ -146,7 +142,7 @@ const ManageOrder = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => handleSubmitStatus(order.id)}
+                onClick={() => handleSubmitStatus(order.orderId)}
                 sx={{ marginLeft: "20px" }}
               >
                 Submit
