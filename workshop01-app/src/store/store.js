@@ -1,7 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import sessionSlice from "./feature/session";
+import homeSlice from "./feature/home";
+import  menuDetailSlice  from "./feature/menudetail";
 export const store = configureStore({
   reducer: {
-    session: sessionSlice,
+    home: homeSlice,
+    menudetail: menuDetailSlice,
   },
 });
