@@ -6,7 +6,7 @@ import {
   Button,
   MenuItem,
 } from "@mui/material";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 const TableSelector = ({ table, onSelect }) => {
   const [selectTable, setSelectTable] = useState(table[0]);
   const [open, setOpen] = useState(true);
