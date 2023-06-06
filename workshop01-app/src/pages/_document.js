@@ -10,7 +10,7 @@ export default function Document() {
           rel="stylesheet"
         />
       </Head>
-      <body style={{ fontFamily: "Kanit"}}>
+      <body style={{ fontFamily: "Kanit",margin:"0px"}}>
         <Main />
         <NextScript />
       </body>
