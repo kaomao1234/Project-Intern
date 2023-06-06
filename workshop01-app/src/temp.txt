@@ -9,3 +9,8 @@ after select table[User role]:
     - Click menu
         if select menu && input quantity:
             - create order item bind with orderId
+Admin:
+- show each of table
+	- click table for show all orderItem of table
+- add menu
+	- menu := id(auto generate),name,description,price,imageSrc
