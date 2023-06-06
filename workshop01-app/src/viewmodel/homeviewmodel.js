@@ -60,10 +60,8 @@ class HomeViewModel {
     return result;
   }
 
-  async deleteOrderItem(orderItemId, tableNumber) {
+  async deleteOrderItem(orderItemId) {
     await this.db.delete(`orderItems/${orderItemId}`);
-    this.getOrderItemFromTableNumber(tableNumber);
-    this.notifyObservers();
   }
   async updateOrderItem(model) {
     await this.db.update(`orderItems/${model.id}`, {
@@ -71,23 +69,19 @@ class HomeViewModel {
       orderId: model.orderId,
       quantity: model.quantity,
     });
-    this.notifyObservers();
   }
 
   async readMenu() {
     if (Object.keys(this.menus).length == 0) {
       const snapshot = await this.db.read("menus");
       if (snapshot.exists()) {
-        Object.assign(this.menus, snapshot.val());
+        // Object.assign(this.menus, snapshot.val());
+        return snapshot.val();
       }
     }
-    this.notifyObservers();
-
-    return this.menus;
   }
   async createOrder(table) {
     let orderId = generateUID();
-
     const date = Date.now();
     let formattedDate = Intl.DateTimeFormat("en-US", this.options).format(date);
     const order = await this.db.read(`orders/${table}`);
@@ -103,7 +97,7 @@ class HomeViewModel {
     }
   }
 
-  async getOrderItemFromTableNumber(tableNumber) {
+  async readOrderItem(tableNumber) {
     let result = {};
     const orderSnapshot = await this.db.read(`orders/${tableNumber}`);
     if (orderSnapshot.exists()) {
@@ -119,7 +113,7 @@ class HomeViewModel {
         this.orderItems = result;
       }
     }
-    this.notifyObservers();
+    return result;
   }
 }
 export default HomeViewModel;
