@@ -12,18 +12,16 @@ import {
   ModeEditOutline,
   MenuBookSharp,
 } from "@mui/icons-material";
-import { useState, useEffect } from "react";
-const orderitem = (props) => {
-  let model =
-    props.model == undefined
+import { useState, useEffect, memo, Component } from "react";
+const orderitem = ({ model, menu, onClick, onDeleteClick }) => {
+  model =
+    model == undefined
       ? {
           name: "Untitle",
           price: "100",
           quantity: "10",
         }
-      : props.model;
-  let menu = props.menu;
-
+      : model;
   return (
     <Box
       sx={{
@@ -36,7 +34,7 @@ const orderitem = (props) => {
       }}
     >
       <IconButton
-        onClick={props.onDeleteClick}
+        onClick={onDeleteClick}
         sx={{
           color: "#F95F66",
           ":hover": {
@@ -90,7 +88,7 @@ const orderitem = (props) => {
                   if (model.quantity > 1) {
                     model.quantity--;
                   }
-                  props.onClick(model);
+                  onClick(model);
                 }}
               >
                 <Remove />
@@ -100,7 +98,7 @@ const orderitem = (props) => {
                   if (model.quantity < 20) {
                     model.quantity++;
                   }
-                  props.onClick(model);
+                  onClick(model);
                 }}
               >
                 <Add />
@@ -123,4 +121,4 @@ const orderitem = (props) => {
   );
 };
 
-export default orderitem;
+export default memo(orderitem);
