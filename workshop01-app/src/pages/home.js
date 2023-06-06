@@ -4,8 +4,7 @@ import {
   Typography,
   Grid,
   IconButton,
-  MenuItem,
-  TextField,
+  CardMedia,
 } from "@mui/material";
 import {
   SearchOutlined,
@@ -18,7 +17,6 @@ import {
 } from "@mui/icons-material";
 import {
   SideButton,
-  LeadingImageButton,
   TextFieldIcon,
   MenuCard,
   MenuListGrid,
@@ -26,50 +24,80 @@ import {
   OrderItemField,
   TableSelectorModal,
 } from "../components";
-import { setSession } from "../store/feature/session";
 import { use100vh } from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter, withRouter } from "next/router";
 import { HomeViewModel } from "../viewmodel";
-const viewmodel = new HomeViewModel();
+import { MenuItemModel, OrderItemModel } from "../model";
+import { setState } from "../store/feature/home";
 const Home = () => {
+  const viewmodel = useRef(new HomeViewModel());
   const height = use100vh();
-  const table = [1, 2, 3, 4, 5];
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [menus, setMenus] = useState([]);
-  const [orderItems, setOrderItems] = useState([]);
-  const tableNumber = useSelector((state) => state.session.value.table);
-  tableNumber != undefined
-    ? viewmodel.getOrderItemFromTableNumber(tableNumber)
-    : null;
-  viewmodel.observers = [
-    () => {
-      let getMenu = viewmodel.getMenus();
-      if (JSON.stringify(menus) != JSON.stringify(getMenu)) {
-        setMenus(getMenu);
-        console.log("call menu");
+  console.log("Home:copy!!!");
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const menus = await viewmodel.current.readMenu();
+        let orderItems = [];
+        let calPrice = 0;
+        if (router.query.selectedTable != undefined) {
+          orderItems = await viewmodel.current.readOrderItem(
+            router.query.selectedTable
+          );
+          const resultLst = Object.entries(orderItems);
+          for (let index = 0; index < resultLst.length; index++) {
+            const orderItem = resultLst[index];
+            calPrice +=
+              menus[orderItem[1].menuId].price * orderItem[1].quantity;
+          }
+        }
+        dispatch(
+          setState({
+            menus: menus,
+            totalPrice: calPrice,
+            orderItems: orderItems,
+            selectedTable: router.query.selectedTable || 0,
+          })
+        );
+      } catch (error) {
+        console.error(error);
       }
-    },
-    () => {
-      let getOrderItems = viewmodel.getOrderItems();
-      if (JSON.stringify(orderItems) != JSON.stringify(getOrderItems)) {
-        setOrderItems(getOrderItems);
-        console.log("call orderitems");
-      }
-    },
-    () => {
-      let getTotalPrice = viewmodel.getTotalPrice();
-      if (totalPrice != getTotalPrice) {
-        setTotalPrice(getTotalPrice);
-        console.log("call total price");
-      }
-    },
-  ];
-  viewmodel.readMenu();
+    }
+    fetchData();
+  }, [dispatch, router.query.selectedTable, viewmodel]);
+
+  const available = useSelector((state) => state.home.available);
+  const menus = useSelector((state) => state.home.menus);
+  const orderItems = useSelector((state) => state.home.orderItems);
+  const totalPrice = useSelector((state) => state.home.totalPrice);
+  const selectedTable = useSelector((state) => state.home.selectedTable);
+  const calTotalPrice = async () => {
+    const orderItems = await viewmodel.current.readOrderItem(selectedTable);
+    let calPrice = 0;
+    const resultLst = Object.entries(orderItems);
+    for (let index = 0; index < resultLst.length; index++) {
+      const orderItem = resultLst[index];
+      calPrice += menus[orderItem[1].menuId].price * orderItem[1].quantity;
+    }
+    return calPrice;
+  };
+  if (!available) {
+    // Render a loading state or return null while waiting for data
+    return (
+      <Typography
+        sx={{
+          color: "black",
+        }}
+      >
+        Loading...
+      </Typography>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -79,13 +107,20 @@ const Home = () => {
         overflow: "auto",
       }}
     >
-      {tableNumber == undefined ? (
+      {router.query.selectedTable == undefined ? (
         <TableSelectorModal
-          table={table}
-          onSelect={(table) => {
-            viewmodel.getOrderItemFromTableNumber(table);
-            dispatch(setSession({ table: table }));
-            viewmodel.createOrder(table);
+          table={[1, 2, 3, 4, 5]}
+          onSelect={async (table) => {
+            const result = await viewmodel.current.readOrderItem(table);
+            const calculatedTotalPrice = await calTotalPrice();
+            dispatch(
+              setState({
+                selectedTable: table,
+                orderItems: result,
+                totalPrice: calculatedTotalPrice,
+              })
+            );
+            viewmodel.current.createOrder(table);
           }}
         />
       ) : null}
@@ -110,8 +145,8 @@ const Home = () => {
         ></Pets>
         <SideButton icon={FastfoodOutlined} text="Food" />
 
-        <SideButton icon={CoffeeOutlined} text="Drinks" />
-        <SideButton icon={LocalShippingOutlined} text="Package" />
+        {/* <SideButton icon={CoffeeOutlined} text="Drinks" />
+        <SideButton icon={LocalShippingOutlined} text="Package" /> */}
       </Box>
       <Box
         sx={{
@@ -202,46 +237,98 @@ const Home = () => {
                   }}
                 />
               </IconButton>
-              <LeadingImageButton
-                image="https://cdn.pixabay.com/photo/2016/12/09/09/52/girl-1894125_960_720.jpg"
-                text="Username"
-              />
+              <Button
+                variant="contained"
+                sx={{
+                  padding: "10px 10px",
+                  backgroundColor: "#F95F66",
+                  height: "50px",
+                  ":hover": {
+                    backgroundColor: "#F95F66",
+                  },
+                }}
+              >
+                <CardMedia
+                  image="https://cdn.pixabay.com/photo/2016/12/09/09/52/girl-1894125_960_720.jpg"
+                  sx={{
+                    margin: "0px 10px",
+                    height: "30px",
+                    width: "30px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    textTransform: "capitalize",
+                    marginX: "5px",
+                  }}
+                >
+                  Username
+                </Typography>
+              </Button>
             </Grid>
           </Grid>
         </Box>
         <Box sx={{ marginX: "12px", marginTop: "20px" }}>
           <Grid container spacing={2} sx={{}}>
             <MenuListGrid>
-              {menus.length == 0 ? (
-                <Typography sx={{ color: "black" }}>No menus data</Typography>
-              ) : (
-                menus.map((item, index) => (
+              {Object.entries(menus).map((item, index) => {
+                const menu = MenuItemModel.fromMap({
+                  id: item[0],
+                  name: item[1].name,
+                  description: item[1].description,
+                  price: item[1].price,
+                  imageSrc: item[1].imageSrc,
+                });
+                return (
                   <MenuCard
                     key={index}
-                    model={item}
+                    model={menu}
                     onClick={() => {
-                      console.log(item);
-                      dispatch(setSession({ model: item.toMap() }));
-                      router.push("/menudetail");
+                      router.push(
+                        `/menudetail?${new URLSearchParams({
+                          selectedTable: selectedTable,
+                          menu: JSON.stringify(menu.toMap()),
+                        }).toString()}`
+                      );
                     }}
                   />
-                ))
-              )}
+                );
+              })}
             </MenuListGrid>
-            <OrderListGrid totalValue={parseFloat(totalPrice).toFixed(2)}>
-              {orderItems.length != 0 && menus.length != 0
-                ? orderItems.map((item, index) => (
-                    <OrderItemField
-                      onDeleteClick={() =>
-                        viewmodel.deleteOrderItem(item.id, tableNumber)
-                      }
-                      onClick={(model) => viewmodel.updateOrderItem(model)}
-                      key={index}
-                      model={item}
-                      menu={viewmodel.menus[item.menuId]}
-                    />
-                  ))
-                : null}
+            <OrderListGrid totalPrice={parseFloat(totalPrice).toFixed(2)}>
+              {Object.entries(orderItems).map((item, index) => {
+                const model = OrderItemModel.fromMap({
+                  id: item[0],
+                  orderId: item[1].orderId,
+                  menuId: item[1].menuId,
+                  quantity: item[1].quantity,
+                });
+                return (
+                  <OrderItemField
+                    onDeleteClick={() =>
+                      viewmodel.current.deleteOrderItem(item[0])
+                    }
+                    onClick={async (model) => {
+                      viewmodel.current.updateOrderItem(model);
+                      const orderItems = await viewmodel.current.readOrderItem(
+                        selectedTable
+                      );
+                      const calculatedTotalPrice = await calTotalPrice();
+                      dispatch(
+                        setState({
+                          orderItems: orderItems,
+                          totalPrice: calculatedTotalPrice,
+                        })
+                      );
+                    }}
+                    key={index}
+                    model={model}
+                    menu={menus[model.menuId]}
+                  />
+                );
+              })}
             </OrderListGrid>
           </Grid>
         </Box>
