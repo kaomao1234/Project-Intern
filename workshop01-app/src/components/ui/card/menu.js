@@ -17,11 +17,10 @@ const MenuCardStyle = styled(Card)({
   // width:"180px"
 });
 
-const MenuCard = (props) => {
-  const model = props.model;
+const MenuCard = ({model,onClick}) => {
   return (
     <Grid item xs={12} md={4} sm={6} lg={4}>
-      <MenuCardStyle onClick={props.onClick}>
+      <MenuCardStyle onClick={onClick}>
         <CardActionArea sx={{ height: "100%" }}>
           <Stack
             spacing={2}
@@ -71,6 +70,7 @@ const MenuCard = (props) => {
               width: "100%",
               zIndex: 0,
             }}
+            component={"div"}
           />
         </CardActionArea>
       </MenuCardStyle>
