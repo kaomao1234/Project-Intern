@@ -1,5 +1,6 @@
 import { Grid, Box, Typography, Button } from "@mui/material";
 import { Save, Money } from "@mui/icons-material";
+import { useState } from "react";
 const orderlist = (props) => {
   const date = Date.now();
   const options = {
@@ -83,7 +84,7 @@ const orderlist = (props) => {
               color: "#F95F66",
             }}
           >
-            {props.totalValue}
+            {props.totalPrice}
           </Typography>
         </Box>
         <Box
