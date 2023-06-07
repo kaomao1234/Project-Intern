@@ -1,9 +1,14 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
-const inter = Inter({ subsets: ['latin'] })
-import Login from './login'
-export default function Home() {
-  return <div className='w-screen h-screen'>
-    <Login></Login>
-  </div>
+import React from 'react';
+import Button from '@mui/material/Button'
+import Login from './login';
+class Home extends React.Component {
+  constructor(props: any) {
+    super(props);
+  }
+  render(): React.ReactNode {
+    return <Login></Login>
+  }
 }
+export default Home;
