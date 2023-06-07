@@ -1,7 +1,5 @@
 import { useTheme } from "@mui/material/styles";
 import { Box, Grid, TextField, Typography, InputAdornment, IconButton, Button, CardMedia } from "@mui/material";
-import { use100vh } from "react-div-100vh";
-import { useEffect, useRef, useState } from "react";
 import { Search, ShoppingCartOutlined } from '@mui/icons-material';
 
 const FoodList = () => {
