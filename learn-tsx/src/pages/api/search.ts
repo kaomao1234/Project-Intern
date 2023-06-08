@@ -1,6 +1,6 @@
 // In pages/api/search.js:
 import { key } from "./key"
-import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
+import axios, { AxiosResponse, AxiosRequestConfig, AxiosError } from 'axios';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -9,24 +9,19 @@ export default async function handler(
 ): Promise<void> {
   const options: AxiosRequestConfig = {
     method: 'GET',
-    url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search',
+    url: `https://api.spoonacular.com/recipes/complexSearch?apiKey=${key}`,
     params: {
-      query: req.query.keyword as string,
-      diet: req.query.diet as string,
-      excludeIngredients: req.query.exclude as string,
-      number: '20',
+      query: req.query.query as string,
+      maxFat: req.query.maxFat as string,
+      number: req.query.number as string,
       offset: '0'
     },
-    headers: {
-      'x-rapidapi-host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com',
-      'x-rapidapi-key': key
-    }
   };
 
   try {
     const response: AxiosResponse = await axios(options);
     res.status(200).json(response.data);
-  } catch (error: unknown) {
+  } catch (error:any) {
     if (axios.isAxiosError(error)) {
       console.error(error.response);
     } else {
