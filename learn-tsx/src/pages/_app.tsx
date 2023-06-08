@@ -4,26 +4,30 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const theme = createTheme({
   typography: {
     fontFamily: '"Kanit", sans-serif',
-    fontWeightMedium: 300
+    fontWeightMedium: 200
   },
   palette: {
     primary: {
-      main: '#f7f8f7',
-    },
-    secondary: {
+      
       main: '#070807',
     },
+    secondary: {
+      main: '#f7f8f7',
+    },
+    info:{
+      main:"#a28d8b"
+    }
   },
   components: {
     MuiButton: {
       styleOverrides: {
         containedPrimary: {
-          color: '#f7f8f7', // Custom primary button text color
-          backgroundColor: '#c5c4cf', // Custom primary button background color
+          backgroundColor: '#f7f8f7', // Custom primary button text color
+          color: '#c5c4cf', // Custom primary button background color
         },
         containedSecondary: {
-          color: '#f7f8f7', // Custom secondary button text color
-          backgroundColor: '#141915', // Custom secondary button background color
+          backgroundColor: '#f7f8f7', // Custom secondary button text color
+        color: '#141915', // Custom secondary button background color
         },
       },
     },
