@@ -9,6 +9,7 @@ function Login() {
     const theme = useTheme();
     const primary = theme.palette.primary.main;
     const secondary = theme.palette.secondary.main;
+    const info = theme.palette.info.main;
     const height = use100vh();
 
 
@@ -20,14 +21,16 @@ function Login() {
             backgroundColor: secondary,
             boxSizing: "border-box",
             height: {
-                lg: "100%",
-                xl: height
+                xl: "100vh"
             },
             width: {
                 xs: "100vh",
-                sm: "100%",
-                md: "100%",
-                xl: "100%"
+            },
+            [theme.breakpoints.up('xs')]: {
+                width: "100%"
+            },
+            [theme.breakpoints.down('lg')]: {
+                height: "100vh",
             }
 
         }}>
@@ -71,7 +74,7 @@ function Login() {
                         width: "500px",
                         height: "400px",
                         border: '2px solid',
-                        borderColor: '#a28d8b',
+                        borderColor: info,
                         borderRadius: "20px",
                         boxShadow: '10px 10px 25px #a28d8b',
                         boxSizing: "border-box",
@@ -83,15 +86,15 @@ function Login() {
                                 color: primary
                             },
                             '& .MuiOutlinedInput-root': {
-                                color: "white",
+                                color: primary,
                                 '& fieldset': {
-                                    borderColor: '#a28d8b',
+                                    borderColor: info,
                                 },
                                 '&:hover fieldset': {
-                                    borderColor: '#a28d8b'
+                                    borderColor: info
                                 },
                                 '&.Mui-focused fieldset': {
-                                    borderColor: 'white',
+                                    borderColor: primary,
                                 },
                             },
                         }} ></TextField>
@@ -101,23 +104,27 @@ function Login() {
                                 color: primary
                             },
                             '& .MuiOutlinedInput-root': {
-                                color: "white",
+                                color: primary,
                                 '& fieldset': {
-                                    borderColor: '#a28d8b',
+                                    borderColor: info,
                                 },
                                 '&:hover fieldset': {
-                                    borderColor: '#a28d8b'
+                                    borderColor: info
                                 },
                                 '&.Mui-focused fieldset': {
-                                    borderColor: 'white',
+                                    borderColor: primary,
                                 },
                             },
                         }} ></TextField>
-                        <Button variant="contained" sx={{
-                            backgroundColor: "#a28d8b",
+                        <Button variant="contained" color='secondary' sx={{
+                            backgroundColor: secondary,
                             marginTop: "20px",
                             height: "50px",
                             textTransform: "capitalize",
+                            ":hover": {
+                                backgroundColor: primary,
+                                color: secondary
+                            }
 
 
 
@@ -125,20 +132,26 @@ function Login() {
                         }}>Log in</Button>
                         <Button sx={{
                             marginTop: "20px",
-                            textTransform: "capitalize"
+                            textTransform: "capitalize",
+                            color: primary
+
                         }}>forgotten password?</Button>
                         <Divider sx={{
-                            backgroundColor: "#a28d8b",
+                            backgroundColor: info,
                             height: "1px"
                         }} />
                         <Button variant="contained" sx={{
-                             backgroundColor: "#a28d8b",
+                          backgroundColor: secondary,
                             marginTop: "20px",
                             textTransform: "capitalize",
                             height: "50px",
                             width: "50%",
-                            alignSelf: "center"
-                        }}>Create new account</Button>
+                            alignSelf: "center",
+                            ":hover": {
+                                backgroundColor: primary,
+                                color: secondary
+                            }
+                        }} color='secondary'>Create new account</Button>
                     </Box>
                 </Grid>
             </Grid>
