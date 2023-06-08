@@ -1,23 +1,33 @@
 import { useTheme } from "@mui/material/styles";
-import { Box, Grid, TextField, Typography, InputAdornment, IconButton, Button, CardMedia } from "@mui/material";
+import { Box, Grid, TextField, Typography, InputAdornment, IconButton, Button, CardMedia, Card, CardActionArea } from "@mui/material";
 import { Search, ShoppingCartOutlined } from '@mui/icons-material';
+import { useEffect, useRef, useState } from "react";
+import { FoodListViewModel } from "../viewmodel";
 
 const FoodList = () => {
     const theme = useTheme();
     const primary = theme.palette.primary.main;
     const secondary = theme.palette.secondary.main;
-
-    let arr = [];
-    for (let index = 0; index < 100; index++) {
-        arr.push(
-            <div key={index} style={{ color: "white" }}>
-                hello{index}
-            </div>
-        );
-    }
+    const viewmodel: FoodListViewModel = useRef(new FoodListViewModel()).current;
+    const [menus, setMenus] = useState(null);
+    useEffect(() => {
+        async function fetchData() {
+            const res = await viewmodel.readRandomfood('2', 'vegetarian,dessert');
+            const data = res.recipes as Array<any>;
+            let result = [];
+            data.forEach((item, index) => {
+                result.push({
+                    id: item.id,
+                    title: item.title,
+                    image: item.image
+                })
+            })
+        }
+        fetchData();
+    }, [viewmodel]);
     return (
         <div>
-            <Box
+            <Box id="navbar"
                 sx={{
                     position: "fixed",
                     zIndex: "100",
@@ -107,7 +117,7 @@ const FoodList = () => {
                     </Grid>
                 </Grid>
             </Box>
-            <Box
+            <Box id="body"
                 sx={{
                     height: "calc(100vh - 56px)",
                     overflowY: "auto",
@@ -119,7 +129,41 @@ const FoodList = () => {
                     },
                 }}
             >
-                {arr}
+                <Box id="menus">
+                    <Card sx={{
+                        backgroundColor: "red",
+                        height: "220px",
+                        width: "50%",
+                        borderRadius: "8px",
+
+
+                    }}>
+                        <CardActionArea sx={{
+                            height: "100%",
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                        }}>
+
+                            <CardMedia title="" image="https://spoonacular.com/recipeImages/1098347-556x370.jpg" sx={{
+                                height: "100%",
+                                width: "40%",
+                            }}>
+
+                            </CardMedia>
+                            <Box sx={{
+                                width: "60%"
+                            }}>
+
+                                <Typography variant="h4" color="primary">Menu name</Typography >
+                                <Typography variant="body1" color="primary">heath score</Typography >
+                                <Typography variant="body1" color="primary">type</Typography >
+                            </Box>
+
+                        </CardActionArea>
+                    </Card>
+
+                </Box>
             </Box>
         </div>
     );
