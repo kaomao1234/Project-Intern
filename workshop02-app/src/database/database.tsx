@@ -14,6 +14,7 @@ class Database {
     database;
     constructor() {
         const firebaseConfig = {
+            databaseURL: "https://mini-projectintern-default-rtdb.firebaseio.com/",
         };
         const app = initializeApp(firebaseConfig);
         this.database = getDatabase(app);
