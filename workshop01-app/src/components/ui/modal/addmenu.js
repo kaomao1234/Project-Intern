@@ -6,7 +6,7 @@ const AddMenuModal = ({ isOpen, onClose, onAddMenu }) => {
     name: "",
     price: "",
     description: "",
-    image: "",
+    imageSrc: "",
   });
 
   const handleInputChange = (event) => {
@@ -80,9 +80,9 @@ const AddMenuModal = ({ isOpen, onClose, onAddMenu }) => {
           margin="normal"
         />
         <TextField
-          name="image"
+          name="imageSrc"
           label="Image Link"
-          value={newMenu.image}
+          value={newMenu.imageSrc}
           onChange={handleInputChange}
           fullWidth
           margin="normal"
@@ -92,7 +92,7 @@ const AddMenuModal = ({ isOpen, onClose, onAddMenu }) => {
           color="primary"
           onClick={handleAddMenu}
           disabled={
-            !newMenu.name || !newMenu.price || !newMenu.detail || !newMenu.image
+            !newMenu.name || !newMenu.price || !newMenu.description || !newMenu.imageSrc
           }
         >
           Add
