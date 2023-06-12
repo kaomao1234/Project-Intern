@@ -8,7 +8,8 @@ const Admin = () => {
   const router = useRouter();
   const [tables, setTables] = useState(null);
   const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
-  let viewmodel = useRef(new AdminViewModel());
+  let viewmodelRef = useRef(new AdminViewModel());
+  let viewmodel = viewmodelRef.current;
   const handleAddMenuOpen = () => {
     setIsAddMenuOpen(true);
   };
