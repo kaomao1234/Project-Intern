@@ -3,7 +3,6 @@ import { DataBase } from "../database";
 import { MenuItemModel, OrderItemModel } from "../model";
 import { generateUID, OrderStatus, ObjTool } from "../utils";
 import { useSelector } from "react-redux";
-
 class HomeViewModel {
   constructor() {
     this.db = new DataBase();
