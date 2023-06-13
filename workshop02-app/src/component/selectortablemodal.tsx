@@ -1,15 +1,17 @@
 import { Box, FormControl, InputLabel, MenuItem, Modal, Select } from "@mui/material";
-import { useTheme, Typography } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { useTheme, Typography, Button } from "@mui/material";
+import { MouseEventHandler, ReactNode, useState } from "react";
 interface Arg {
     isOpen: boolean;
-    onClose: () => void;
+    onClose?: MouseEventHandler<HTMLElement>;
+    onSubmit?: (value: string) => void;
 }
 function SelectorTableModal(arg: Arg) {
     const theme = useTheme();
     const primary = theme.palette.primary.main;
     const secondary = theme.palette.secondary.main;
     const [selectedOption, setSelectedOption] = useState('');
+    const allTable: number[] = [1, 2, 3, 4, 5];
 
     const handleChange = (event: any) => {
         setSelectedOption(event.target.value);
@@ -26,7 +28,10 @@ function SelectorTableModal(arg: Arg) {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
+            "> *": {
+                marginY: "5px"
+            }
         }}>
             <Typography variant="body1" color="primary">Table</Typography>
             <FormControl>
@@ -35,12 +40,18 @@ function SelectorTableModal(arg: Arg) {
                     id="dropdown"
                     value={selectedOption}
                     onChange={handleChange}
+                    sx={{
+                        width: "150px"
+                    }}
                 >
-                    <MenuItem value="option1">Option 1</MenuItem>
-                    <MenuItem value="option2">Option 2</MenuItem>
-                    <MenuItem value="option3">Option 3</MenuItem>
+                    {allTable.map((item, index) => <MenuItem key={index} value={item}>{item}</MenuItem>)}
                 </Select>
             </FormControl>
+            <Button variant="contained" color="secondary" onClick={() => {
+                arg.onSubmit?.(selectedOption);
+            }}>
+                Submit
+            </Button>
         </Box>
     </Modal>
 }
