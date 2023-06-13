@@ -7,15 +7,20 @@ import { HomeViewModel } from '../viewmodel';
 import { FoodMenuItem, OrderItem } from '../interface';
 import { generateUid } from '../utils';
 import { FoodMenuCard, SelectorTableModal } from '@/component';
+import { useRouter } from 'next/router';
 export default function Home() {
+    const router = useRouter();
+    const query = router.query;
+    const selectedTableRef = useRef<string | null>(null);
     const theme: Theme = useTheme();
     const primary = theme.palette.primary.main;
     const secondary = theme.palette.secondary.main;
-    const viewmodel = useRef(new HomeViewModel).current
+    const viewmodel = useRef(new HomeViewModel).current;
     const [openDrawer, setOpenDrawer] = useState(false);
     const [openSelectorTableModal, setOpenSelectorTableModal] = useState(true);
     const foodMenus = useRef<{ [key: string]: FoodMenuItem }>();
     const foodMenusNotifier = useValueNotifier(null);
+    const orderMenus = useRef<{ [key: string]: OrderItem }>();
     const orderItemsNotifier = useValueNotifier(null);
     const handleOpenDrawer = () => {
         setOpenDrawer(true);
@@ -29,12 +34,18 @@ export default function Home() {
     const handleCloseSelectorTableModal = () => {
         setOpenSelectorTableModal(false);
     }
+    const handleSubmitSelectorTableModal = (selectorTable: string) => {
+        selectedTableRef.current = selectorTable;
+        fetchOrderItems();
+        handleCloseSelectorTableModal();
+    }
     const fetchMenu = async () => {
         foodMenus.current = await viewmodel.readMenu();
         foodMenusNotifier.set(foodMenus.current);
     }
     const fetchOrderItems = async () => {
-
+        orderMenus.current = await viewmodel.readOrderItem(selectedTableRef.current as string);
+        orderItemsNotifier.set(orderMenus.current);
     }
     const handleSearhChange = (e: any) => {
         const searchChange: string = e.target.value;
@@ -46,7 +57,6 @@ export default function Home() {
         } else {
             foodMenusNotifier.set(foodMenus.current);
         }
-
     }
     const menuBuilder = (value: { [key: string]: FoodMenuItem }): ReactNode => {
         if (value != null) {
@@ -61,16 +71,20 @@ export default function Home() {
         }
     }
 
-    const orderItemBuilder = (value: OrderItem): ReactNode => {
-        return <Typography variant="h4" color="primary" sx={{
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            width: "100%", height: "100%"
-        }}> order Loading..</Typography>
+    const orderItemBuilder = (value: { [key: string]: OrderItem }): ReactNode => {
+        if (value != null) {
+        }
+        else {
+            return <Typography variant="h4" color="primary" sx={{
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                width: "100%", height: "100%"
+            }}> order Loading..</Typography>
+        }
     }
     return (<div>
-        <SelectorTableModal isOpen={openSelectorTableModal} onClose={handleCloseSelectorTableModal} />
+        <SelectorTableModal isOpen={openSelectorTableModal} onSubmit={handleSubmitSelectorTableModal} />
         <Box sx={{
             height: {
                 lg: "100vh"
@@ -191,9 +205,14 @@ export default function Home() {
                     flexDirection: "row",
                     flexWrap: 'wrap',
                     overflowY: "auto",
-                    [theme.breakpoints.down('lg')]: {
-                        width: "100%"
+                    [theme.breakpoints.between("sm", 'md')]: {
+                        height: "calc(100vh - 106px)",
+                        width: "100%",
                     },
+                    [theme.breakpoints.only("xs")]: {
+                        height: "calc(100vh - 130px)",
+                        width: "100%",
+                    }
                 }}>
                     <ValueListenableBuilder valueListenable={foodMenusNotifier} builder={menuBuilder} />
                 </Box>
@@ -202,7 +221,7 @@ export default function Home() {
                     width: "30%",
                     display: "flex",
                     flexDirection: "column",
-                    [theme.breakpoints.down('lg')]: {
+                    [theme.breakpoints.down('md')]: {
                         width: "100%"
                     },
                 }}>
