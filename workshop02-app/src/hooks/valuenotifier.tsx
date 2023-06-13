@@ -57,7 +57,15 @@ class ValueNotifier {
         this.notifyListener();
     }
 }
-const useValueNotifier = (value: any) => {
-    return useRef(new ValueNotifier(value)).current;
+/**
+ * Creates a valueNotifier object with the provided initial value and returns it.
+ *
+ * @param {any} value - The initial value for the valueNotifier.
+ * @returns {ValueNotifier} valueNotifier - The valueNotifier object with the provided initial value.
+ */
+function useValueNotifier(value: any): ValueNotifier {
+    // Create a valueNotifier object with the provided initial value using useRef
+    const valueNotifier = useRef(new ValueNotifier(value)).current
+    return valueNotifier;
 }
 export { useValueNotifier, ValueNotifier };
