@@ -46,7 +46,7 @@ class HomeViewModel {
         }
         return result;
     }
-    async createOrder(table: number) {
+    async createOrder(table: string) {
         let orderId: string = generateUid();
         const date = Date.now();
         let formattedDate = Intl.DateTimeFormat("en-US", this.options).format(date);
@@ -63,7 +63,7 @@ class HomeViewModel {
         }
     }
 
-    async readOrderItem(tableNumber: number): Promise<{ [key: string]: OrderItem }> {
+    async readOrderItem(tableNumber: string): Promise<{ [key: string]: OrderItem }> {
         let result: { [key: string]: OrderItem } = {};
         const orderSnapshot = await this.db.read(`orders/${tableNumber}`);
         if (orderSnapshot.exists()) {
@@ -83,6 +83,7 @@ class HomeViewModel {
                 this.orderItems = result;
             }
         }
+        console.log(result);
         return this.orderItems;
     }
 }
