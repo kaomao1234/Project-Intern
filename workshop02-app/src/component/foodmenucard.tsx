@@ -1,6 +1,6 @@
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { FoodMenuItem } from "../interface";
-import { Box, CardActionArea, CardMedia, Typography, useTheme } from "@mui/material";
+import { Box, CardActionArea, CardMedia, Typography, useTheme, Skeleton } from "@mui/material";
 interface Arg {
     foodMenuItem: FoodMenuItem,
     onClick?: MouseEventHandler<HTMLElement>,
@@ -9,6 +9,14 @@ function FoodMenuCard(arg: Arg) {
     const theme = useTheme()
     const primary = theme.palette.primary.main;
     const secondary = theme.palette.secondary.main;
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        const fetchImage = new Image();
+        fetchImage.onload = (ev: Event) => {
+            setLoading(true)
+        }
+        fetchImage.src = arg.foodMenuItem.imageSrc;
+    }, [])
     return <Box sx={{
 
         boxSizing: 'border-box',
@@ -31,10 +39,10 @@ function FoodMenuCard(arg: Arg) {
             width: "100%",
             borderRadius: "10px",
         }}>
-            <CardMedia image={arg.foodMenuItem.imageSrc} sx={{
+            {loading ? <CardMedia image={arg.foodMenuItem.imageSrc} sx={{
                 height: "100%", width: "100%",
                 borderRadius: "10px",
-            }}>
+            }} >
                 <Box><Typography variant="body1" color="primary" sx={{
                     display: "inline-block",
                     backgroundColor: secondary,
@@ -54,7 +62,10 @@ function FoodMenuCard(arg: Arg) {
                         {arg.foodMenuItem.name}
                     </Typography>
                 </Box>
-            </CardMedia>
+            </CardMedia> : <Skeleton sx={{
+                height: "100%", width: "100%",
+                borderRadius: "10px",
+            }} />}
         </CardActionArea>
     </Box>;
 }
