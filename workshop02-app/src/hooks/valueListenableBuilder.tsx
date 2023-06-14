@@ -1,13 +1,9 @@
-import React, { Component, ReactNode, useRef } from "react";
-import { useValueNotifier, ValueNotifier } from "./valuenotifier";
+import React, { ReactNode, useEffect, useState, useCallback } from "react";
+import { ValueNotifier } from "./valuenotifier";
 
 type Props = {
   valueListenable: ValueNotifier;
   builder: (value: any) => ReactNode;
-};
-
-type State = {
-  value: any;
 };
 
 /**
@@ -16,41 +12,25 @@ type State = {
  *
  * @param {ValueNotifier} valueListenable - The valueListenable object that the component listens to for changes.
  * @param {Function} builder - A builder function that takes the current value and returns the ReactNode to render.
+ * @returns {ReactNode} - The rendered output based on the builder function and current value.
  */
-class ValueListenableBuilder extends Component<Props, State> {
+const ValueListenableBuilder = ({ valueListenable, builder }: Props): ReactNode => {
+  const [value, setValue] = useState(valueListenable.get());
 
-  listener: () => void;
-
-  constructor(props: Props) {
-    super(props);
-
-    // Initialize the state with the initial value from valueListenable
-    this.state = {
-      value: props.valueListenable.get(),
+  useEffect(() => {
+    const listener = () => {
+      setValue(valueListenable.get());
     };
+    valueListenable.addListener(listener);
 
-    // Define the listener function that updates the state when called
-    this.listener = () => {
-      this.setState({ value: this.props.valueListenable.get() });
+    return () => {
+      valueListenable.removeListener(listener);
     };
-  }
+  }, [value, valueListenable]);
 
-  componentDidMount() {
-    /* Add the listener to valueListenable when the component is mounted */
-    this.props.valueListenable.addListener(this.listener);
-  }
+  // Render the result of the builder function with the current value
 
-  componentWillUnmount() {
-    /* Remove the listener from valueListenable when the component is unmounted */
-    this.props.valueListenable.removeListener(this.listener);
-  }
-
-  render() {
-    const { builder } = this.props;
-    const { value } = this.state;
-    // Render the result of the builder function with the current value
-    return <>{builder(value)}</>;
-  }
-}
+  return <>{builder(value)}</>;
+};
 
 export default ValueListenableBuilder;
