@@ -16,6 +16,7 @@ function SelectorTableModal(arg: Arg) {
     const handleChange = (event: any) => {
         setSelectedOption(event.target.value);
     };
+
     return <Modal disableAutoFocus open={arg.isOpen} onClose={arg.onClose} sx={{
         display: "flex",
         justifyContent: "center",
@@ -48,6 +49,8 @@ function SelectorTableModal(arg: Arg) {
                 </Select>
             </FormControl>
             <Button variant="contained" color="secondary" onClick={() => {
+                console.log(arg.onSubmit);
+
                 arg.onSubmit?.(selectedOption);
             }}>
                 Submit
