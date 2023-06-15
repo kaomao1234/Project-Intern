@@ -22,23 +22,23 @@ export default function Home() {
     const foodMenusNotifier = useValueNotifier(null);
     const orderMenus = useRef<{ [key: string]: OrderItem }>();
     const orderItemsNotifier = useValueNotifier(null);
-    const handleOpenDrawer = () => {
-        setOpenDrawer(true);
-    };
-    const handleCloseDrawer = () => {
-        setOpenDrawer(false);
-    }
-    const handleOpenSelectorTableModal = () => {
-        setOpenSelectorTableModal(true);
-    }
-    const handleCloseSelectorTableModal = () => {
-        setOpenSelectorTableModal(false);
-    }
-    const handleSubmitSelectorTableModal = (selectorTable: string) => {
-        selectedTableRef.current = selectorTable;
-        fetchOrderItems();
-        handleCloseSelectorTableModal();
-    }
+    const selectorTableModalNotifier = useValueNotifier({
+        isOpen: true,
+        onSubmit: (selectorTable: string) => {
+            selectedTableRef.current = selectorTable;
+            fetchOrderItems();
+            selectorTableModalNotifier.set({ ...selectorTableModalNotifier.get(), isOpen: false })
+        }
+    });
+    const drawerNotifier = useValueNotifier({
+        isOpen: false,
+        hanldeOpen: () => {
+            drawerNotifier.set({ ...drawerNotifier.get(), isOpen: true })
+        },
+        hanldeClose: () => {
+            drawerNotifier.set({ ...drawerNotifier.get(), isOpen: false })
+        }
+    });
     const fetchMenu = async () => {
         foodMenus.current = await viewmodel.readMenu();
         foodMenusNotifier.set(foodMenus.current);
@@ -58,6 +58,14 @@ export default function Home() {
             foodMenusNotifier.set(foodMenus.current);
         }
     }
+    const selectorTableModalBuilder = (value: { isOpen: boolean, onSubmit: (selectedTable: string) => void }): ReactNode => {
+        return <SelectorTableModal isOpen={value.isOpen} onSubmit={value.onSubmit} />
+    }
+    const drawerBuilder = (value: { isOpen: false, handleOpen: () => void, handleClose: () => void }): ReactNode => {
+        return <Drawer anchor='left' open={value.isOpen} onClose={value.handleClose}>
+            <Typography variant="body2" color="primary">hello sidebar</Typography>
+        </Drawer>
+    }
     const menuBuilder = (value: { [key: string]: FoodMenuItem }): ReactNode => {
         if (value != null) {
             const children = Object.entries(value).map((item, index) => {
@@ -67,7 +75,6 @@ export default function Home() {
         }
         else {
             fetchMenu();
-            return <Typography variant="h4" color="primary"> Menu Loading..</Typography>
         }
     }
 
@@ -84,7 +91,8 @@ export default function Home() {
         }
     }
     return (<div>
-        <SelectorTableModal isOpen={openSelectorTableModal} onSubmit={handleSubmitSelectorTableModal} />
+        <ValueListenableBuilder valueListenable={selectorTableModalNotifier} builder={selectorTableModalBuilder} />
+
         <Box sx={{
             height: {
                 lg: "100vh"
@@ -95,9 +103,7 @@ export default function Home() {
             display: "flex",
             flexDirection: "column"
         }}>
-            <Drawer anchor='left' open={openDrawer} onClose={handleCloseDrawer}>
-                <Typography variant="body2" color="primary">hello sidebar</Typography>
-            </Drawer>
+            <ValueListenableBuilder valueListenable={drawerNotifier} builder={drawerBuilder} />
             <AppBar sx={{
                 height: "56px",
                 paddingX: "8px",
@@ -114,7 +120,7 @@ export default function Home() {
                         display: "flex",
                         flexDirection: "row",
                     }}>
-                        <IconButton onClick={handleOpenDrawer} >
+                        <IconButton onClick={drawerNotifier.get().handleOpen} >
                             <Menu color='secondary' />
                         </IconButton>
                         <Box>
@@ -176,7 +182,7 @@ export default function Home() {
                         }}>
                         <Button variant="contained" color="secondary" sx={{
                             width: "150px"
-                        }} onClick={handleOpenSelectorTableModal}>
+                        }} >
                             UserName
                         </Button>
                     </Grid>
